@@ -1,0 +1,67 @@
+@charset "UTF-8";
+
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@300;400;500;700;900&display=swap');
+
+:root {
+    --main-color: #13203a;
+    --text-color: #444444;
+    --light-gray: #e0e0e0;
+    --medium-gray: #b0b0b0;
+    --dark-gray: #5c5c5c;
+    --hover-color: #e2edf9;
+    --tab-color: #f5f5f5;
+    --shadow-color: #37373759;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Zen Kaku Gothic New",'Yu Gothic', 'YuGothic',
+        "Hiragino Kaku Gothic Pro", "ヒラギノ角ゴ Pro W3",
+        "メイリオ", "Meiryo",
+        "MS Pゴシック",
+        "Helvetica Neue", "Helvetica",
+        "Arial", sans-serif;
+}
+
+body {
+    font-size: min(18px, 4vw);
+    background-color: var(--light-gray);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: var(--main-color);
+    margin: 10px 1em
+}
+
+h1 {
+    font-size: 2em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8em;
+    margin: 15px;
+    padding: 15px;
+    border-radius: 30px;
+    background-color: var(--tab-color);
+    box-shadow: 0px 3px 10px 0px var(--shadow-color);
+}
+
+h1 img {
+    width: 1.2em;
+}
+
+.top-page-menu {
+    font-size: 1.5em;
+    text-align: center;
+}
+
+li {
+    margin: 10px 0;
+}
+
+.top-page-how-to-use {
+    margin: 20px 1em;
+}

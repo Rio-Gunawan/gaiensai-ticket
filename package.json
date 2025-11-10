@@ -1,0 +1,26 @@
+{
+  "name": "gaiensai-ticket",
+  "version": "1.0.0",
+  "description": "外苑祭のQRコードによる受付システム",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rio-Gunawan/gaiensai-ticket.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Rio-Gunawan/gaiensai-ticket/issues"
+  },
+  "homepage": "https://github.com/Rio-Gunawan/gaiensai-ticket#readme",
+  "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "eslint": "^9.39.1",
+    "globals": "^16.5.0"
+  }
+}
