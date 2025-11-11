@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style.css">
+    <meta http-equiv="default-style" content="./style.css">
+
+    <link rel="shortcut icon" href="./favicon.ico" type="image/vnd.microsoft.icon" />
+    <link rel="icon" href="./favicon.ico" type="image/vnd.microsoft.icon" />
+    <link rel="apple-touch-icon" href="./imgs/apple-touch-icon.png">
+
+    <meta name="description" content="QRコードを用いた外苑祭チケットシステム">
+    <meta name="author" content="Rio Gunawan">
+    <title>チケット発券 | 外苑祭チケットシステム</title>
+
+</head>
+
+<body>
+    <h1><img src="./images/icho_background.svg" alt="アイコン">チケットを表示</h1>
+    <section id="outputs">
+        <div id="qrcode"></div>
+        <p id="qrcode-data"></p>
+        <h3 id="about-performance"></h3>
+        <p id="for-whom"></p>
+        <p class="url-container"><a id="url"></a></p>
+        <button id="copy-url">URLをコピー</button>
+        <p id="copy-succeed">URLをコピーしました</p>
+        <h4>注意事項</h4>
+        <p>
+            このQRコードをスクリーンショットで保存するか、URLをブラウザのブックマークに登録してください。
+            チケットを他の人に共有する場合は、QRコードのスクリーンショットまたは発行されたURLを送信してください。<br>
+            外苑祭当日は、このQRコードを係員の案内に従って、読み取り端末にかざしてください。
+            このページで発券されたチケットは、外苑祭当日、入場時に必要となります。忘れずに持参してください。
+            このチケットをこのページでもう一度表示することはできませんのでご注意ください。
+        </p>
+    </section>
+    <script src="./lib/jquery-3.7.1.min.js"></script>
+    <script src="./lib/qrcode.min.js"></script>
+    <script src="main.js"></script>
+    <script src="./show.js"></script>
+</body>
+
+</html>
