@@ -36,9 +36,10 @@ $('#generate').on('click', function() {
         height: 256,
         correctLevel: QRCode.CorrectLevel.H
     });
+    $("#qrcode-data").text(QRData);
     $('#about-performance').text($('#performance option:selected').text() + ' ' + $('#time option:selected').text());
     $('#for-whom').text(grade + '年' + classNum + '組' + number + '番 ご' + $('#relation option:selected').text() + '様');
-    $('#url').text('https://rio-gunawan.github.io/show.html?id=' + QRData);
+    $('#url').text('https://rio-gunawan.github.io/show.html?id=' + QRData).attr('href', 'https://rio-gunawan.github.io/show.html?id=' + QRData);
 });
 
 $('#copy-url').on('click', function() {

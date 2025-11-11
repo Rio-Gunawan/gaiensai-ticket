@@ -123,7 +123,13 @@ div#qrcode {
     margin: 30px 0;
 }
 
-#url {
+#qrcode-data {
+    text-align: center;
+    font-size: 1em;
+    color: var(--text-color);
+}
+
+.url-container {
     background-color: var(--medium-gray);
     color: var(--dark-gray);
     overflow: auto;
@@ -133,6 +139,10 @@ div#qrcode {
     margin-top: 10px;
     font-size: 0.8em;
     user-select: all; /* 全て選択可能にする */
+}
+
+.url-container a {
+    color: var(--dark-gray);
 }
 
 #copy-succeed {
