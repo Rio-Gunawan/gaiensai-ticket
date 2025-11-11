@@ -26,9 +26,8 @@ $(function () {
     $("#qrcode-data").text(QRData);
 
     const performanceData = decode(QRData);
-    $('#about-performance').text((Math.floor(performanceData.performance / 7) + 1) + '-' + (performanceData.performance % 7 +1) + ' 第' + performanceData.time + '公演');
-    $('#for-whom').text(Math.floor(performanceData.id / 1000) + '年' + Math.floor((performanceData.id % 1000) / 100) + '組' + (performanceData.id % 100) + '番 ご' + performanceData.relation + '様');
-    $('#url').text('https://rio-gunawan.github.io/gaiensai-ticket/show.html?id=' + QRData).attr('href', './show.html?id=' + QRData);
+    $('#about-performance').text(performanceData.performance + ' ' + performanceData.time);
+    $('#for-whom').text(performanceData.grade + '年' + performanceData.classNum + '組' + performanceData.Number + '番 ご' + performanceData.relation + '様');
 });
 
 $('#copy-url').on('click', function () {
@@ -52,11 +51,17 @@ function decode(data) {
         result = result * 62 + index;
     }
 
+    const id = Math.floor(result / 10000);
+    const performanceRawData = Math.floor((result % 1000) / 10);
+
     const performanceData = {
-        id: Math.floor(result / 10000),
+        id: id,
+        grade: Math.floor(id / 1000),
+        classNum: Math.floor((id % 1000) / 100),
+        Number: (id % 100),
         relation: Math.floor((result % 10000) / 1000),
-        performance: Math.floor((result % 1000) / 10),
-        time: result % 10
+        performance: (Math.floor(performanceRawData/ 7) + 1) + '-' + (performanceRawData % 7 + 1),
+        time: '第' + (result % 10) + '公演'
     };
     switch (performanceData.relation) {
         case 0:

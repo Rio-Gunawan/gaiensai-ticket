@@ -21,6 +21,9 @@ export default defineConfig([
         $: "readonly",
         jQuery: "readonly",
         QRCode: "readonly",
+        Html5Qrcode: "readonly",
+        Html5QrcodeSupportedFormats: "readonly",
+        Html5QrcodeScannerState: "readonly",
       },
     },
     rules: {

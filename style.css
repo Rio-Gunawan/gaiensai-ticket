@@ -18,7 +18,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: "Zen Kaku Gothic New",'Yu Gothic', 'YuGothic',
+    font-family: "Zen Kaku Gothic New", 'Yu Gothic', 'YuGothic',
         "Hiragino Kaku Gothic Pro", "ヒラギノ角ゴ Pro W3",
         "メイリオ", "Meiryo",
         "MS Pゴシック",
@@ -31,9 +31,36 @@ body {
     background-color: var(--light-gray);
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     color: var(--main-color);
     margin: 0px 1em 10px;
+}
+
+header {
+    margin: 15px;
+    padding: 15px;
+    border-radius: 30px;
+    background-color: var(--tab-color);
+    box-shadow: 0px 3px 10px 0px var(--shadow-color);
+}
+
+.scan-header {
+    font-size: 0.6em;
+    text-align: center;
+    padding: 15px;
+    margin-bottom: 10px;
+    position: fixed;
+    left: 3em;
+    z-index: 99;
+}
+
+.scan-header h1 {
+    margin: 0;
 }
 
 h1 {
@@ -42,11 +69,6 @@ h1 {
     align-items: center;
     justify-content: center;
     gap: 0.8em;
-    margin: 15px;
-    padding: 15px;
-    border-radius: 30px;
-    background-color: var(--tab-color);
-    box-shadow: 0px 3px 10px 0px var(--shadow-color);
 }
 
 h1 img {
@@ -69,6 +91,7 @@ li {
 label {
     display: block;
 }
+
 section {
     background-color: white;
     padding: 20px;
@@ -94,6 +117,7 @@ select {
     border: 1px solid var(--medium-gray);
     border-radius: 5px;
     font-size: 1em;
+    cursor: pointer;
 }
 
 button {
@@ -106,7 +130,7 @@ button {
     border-radius: 5px;
     font-size: 1.2em;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: opacity 0.3s;
 }
 
 /* ホバーとマウスポインタ（細かいポインタ）をサポートするデバイスでのみ
@@ -138,7 +162,8 @@ div#qrcode {
     border-radius: 5px;
     margin-top: 10px;
     font-size: 0.8em;
-    user-select: all; /* 全て選択可能にする */
+    user-select: all;
+    /* 全て選択可能にする */
 }
 
 .url-container a {
@@ -164,4 +189,81 @@ div#qrcode {
     margin-right: 1em;
     font-size: 1em;
     color: var(--text-color);
+}
+
+#reader {
+    width: 100vw;
+    margin: 0 auto;
+}
+
+.reader-container {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.mode {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1em;
+    position: fixed;
+    right: 1em;
+    z-index: 99;
+    margin: 15px 0;
+    padding: 5px 15px;
+    border-radius: 30px;
+    box-shadow: 0px 3px 10px 0px var(--shadow-color);
+    background-color: var(--tab-color);
+}
+
+.mode select {
+    width: auto;
+    margin: 0;
+}
+
+#result {
+    position: fixed;
+    z-index: 999;
+    background-color: white;
+    width: 70vw;
+    height: 70vh;
+    top: 15vh;
+    left: 15vw;
+    padding: 30px;
+}
+
+.performance-data-container {
+    position: fixed;
+    z-index: 9999;
+    width: 70vw;
+    height: 70vh;
+    top: 15vh;
+    left: 15vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1em;
+    padding-left: 6em;
+}
+
+#result h3 {
+    margin: 0;
+    font-size: 4em;
+    text-align: left;
+}
+
+#result p {
+    text-align: left;
+    font-size: 1.5em;
+}
+
+.guide-message {
+    position: absolute;
+    bottom: 1em;
+    right: 1em;
+    font-weight: bold;
 }
