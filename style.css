@@ -6,7 +6,7 @@
 :root {
     --main-color: #13203a;
     --text-color: #444444;
-    --light-gray: #e0e0e0;
+    --light-gray: #f0f0f0;
     --medium-gray: #b0b0b0;
     --dark-gray: #5c5c5c;
     --hover-color: #e2edf9;
@@ -33,7 +33,7 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
     color: var(--main-color);
-    margin: 10px 1em
+    margin: 0px 1em 10px;
 }
 
 h1 {
@@ -64,4 +64,94 @@ li {
 
 .top-page-how-to-use {
     margin: 20px 1em;
+}
+
+label {
+    display: block;
+}
+section {
+    background-color: white;
+    padding: 20px;
+    margin: 20px;
+    border-radius: 15px;
+    box-shadow: 0px 3px 10px 0px var(--shadow-color);
+    font-size: 1.2em
+}
+
+input[type="number"] {
+    width: 3em;
+    padding: 10px;
+    margin: 10px 0.3em 20px 0.3em;
+    border: 1px solid var(--medium-gray);
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+select {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0 20px 0;
+    border: 1px solid var(--medium-gray);
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+button {
+    display: block;
+    background-color: var(--main-color);
+    color: white;
+    padding: 15px 30px;
+    margin: 10px auto;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+/* ホバーとマウスポインタ（細かいポインタ）をサポートするデバイスでのみ
+   ホバー時に opacity を下げる（タッチデバイスでは効かない） */
+@media (hover: hover) and (pointer: fine) {
+    button:hover {
+        opacity: 0.7;
+    }
+}
+
+div#qrcode {
+    display: flex;
+    justify-content: center;
+    margin: 30px 0;
+}
+
+#url {
+    background-color: var(--medium-gray);
+    color: var(--dark-gray);
+    overflow: auto;
+    white-space: nowrap;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+    font-size: 0.8em;
+    user-select: all; /* 全て選択可能にする */
+}
+
+#copy-succeed {
+    text-align: center;
+    color: green;
+    font-weight: bold;
+}
+
+#about-performance {
+    text-align: center;
+    font-weight: bold;
+    margin-top: 10px;
+    font-size: 2em;
+}
+
+#for-whom {
+    text-align: right;
+    margin-top: 5px;
+    margin-right: 1em;
+    font-size: 1em;
+    color: var(--text-color);
 }

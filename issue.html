@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style.css">
+    <meta http-equiv="default-style" content="./style.css">
+
+    <link rel="shortcut icon" href="./favicon.ico" type="image/vnd.microsoft.icon" />
+    <link rel="icon" href="./favicon.ico" type="image/vnd.microsoft.icon" />
+    <link rel="apple-touch-icon" href="./imgs/apple-touch-icon.png">
+
+    <meta name="description" content="QRコードを用いた外苑祭チケットシステム">
+    <meta name="author" content="Rio Gunawan">
+    <title>チケット発券 | 外苑祭チケットシステム</title>
+
+</head>
+
+<body>
+    <h1><img src="./images/icho_background.svg" alt="アイコン">チケット発券</h1>
+    <section class="form-container">
+        <label for="grade">学年・クラス・番号:</label>
+        <div>
+            <input type="number" min="1" max="3" id="grade" name="grade">年
+            <input type="number" min="1" max="7" id="class" name="class">組
+            <input type="number" min="1" max="42" id="number" name="number">番
+        </div>
+        <label for="relation">チケットを使う予定の人との関係:
+        </label>
+        <select id="relation" name="relation">
+            <option hidden disabled selected>選択してください</option>
+            <option value="0">本人</option>
+            <option value="1">家族</option>
+            <option value="2">友人</option>
+            <option value="3">その他</option>
+        </select>
+        <label for="performance">発券する公演のクラス
+        </label>
+        <select id="performance" name="performance">
+            <option hidden disabled selected>選択してください</option>
+            <option value="1">1-1</option>
+            <option value="2">1-2</option>
+            <option value="3">1-3</option>
+            <option value="4">1-4</option>
+            <option value="5">1-5</option>
+            <option value="6">1-6</option>
+            <option value="7">1-7</option>
+            <option value="8">2-1</option>
+            <option value="9">2-2</option>
+            <option value="10">2-3</option>
+            <option value="11">2-4</option>
+            <option value="12">2-5</option>
+            <option value="13">2-6</option>
+            <option value="14">2-7</option>
+            <option value="15">3-1</option>
+            <option value="16">3-2</option>
+            <option value="17">3-3</option>
+            <option value="18">3-4</option>
+            <option value="19">3-5</option>
+            <option value="20">3-6</option>
+            <option value="21">3-7</option>
+        </select>
+        <label for="time">公演の回</label>
+        <select id="time" name="time">
+            <option hidden disabled selected>選択してください</option>
+            <option value="1">第1公演</option>
+            <option value="2">第2公演</option>
+            <option value="3">第3公演</option>
+            <option value="4">第4公演</option>
+            <option value="5">第5公演</option>
+            <option value="6">第6公演</option>
+            <option value="7">第7公演</option>
+            <option value="8">第8公演</option>
+        </select>
+
+        <button id="generate">チケット発券</button>
+    </section>
+    <section id="outputs">
+        <h2>発券したチケット</h2>
+        <div id="qrcode"></div>
+        <h3 id="about-performance"></h3>
+        <p id="for-whom"></p>
+        <p id="url"></p>
+        <button id="copy-url">URLをコピー</button>
+        <p id="copy-succeed">URLをコピーしました</p>
+    </section>
+    <script src="./lib/jquery-3.7.1.min.js"></script>
+    <script src="./lib/qrcode.min.js"></script>
+    <script src="main.js"></script>
+    <script src="./generate_qr.js"></script>
+</body>
+
+</html>

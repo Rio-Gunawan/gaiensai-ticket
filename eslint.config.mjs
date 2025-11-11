@@ -17,15 +17,16 @@ export default defineConfig([
       globals: {
         ...globals.browser,
         ...globals.node,
-        // jQuery グローバル変数を有効化
+        // jQuery・QRCodeなどCDNグローバル変数を有効化
         $: "readonly",
         jQuery: "readonly",
+        QRCode: "readonly",
       },
     },
     rules: {
       // セミコロン強制
       "semi": ["error", "always"],
-      
+
       // 開発時に便利な警告
       "no-console": "warn",
       "no-debugger": "warn",
