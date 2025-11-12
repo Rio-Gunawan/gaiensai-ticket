@@ -39,9 +39,18 @@ function addResultItem(codeType, codeData) {
     const timeStr = now.toLocaleTimeString();
 
     const performanceData = decode(codeData);
-    $('#about-performance').text(performanceData.performance + ' ' + performanceData.time);
-    $('#for-whom').text(performanceData.grade + '年' + performanceData.classNum + '組' + performanceData.Number + '番 ご' + performanceData.relation + '様');
-    $('#timestamp').text('読み取り時刻: ' + timeStr);
+    if (IsAuthentic(codeData, performanceData)) {
+        $("#result h2").text('読み取り成功');
+        $('#about-performance').text(performanceData.performance + ' ' + performanceData.time);
+        $('#for-whom').text(performanceData.grade + '年' + performanceData.classNum + '組' + performanceData.Number + '番 ご' + performanceData.relation + '様');
+        $('#timestamp').text('読み取り時刻: ' + timeStr);
+        $('.guide-message').text('ようこそ!外苑祭へ。係員の案内に従って、ご入場ください。');
+    } else {
+        $("#result h2").text('読み取り失敗');
+        $('#about-performance').text('無効なQRコード');
+        $('#timestamp').text('読み取り時刻: ' + timeStr);
+        $('.guide-message').text('このQRコードは無効です。係員にお問い合わせください。');
+    }
     $('#result').fadeIn(100);
     // 読み取り音を再生（オプション）
     playBeepSound();
@@ -119,4 +128,40 @@ function decode(data) {
             break;
     }
     return performanceData;
+}
+
+function calculateCheckDigit(data) {
+    let sum = 0;
+    for (let i = 0; i < data.length; i++) {
+        const index = randomCharacter.indexOf(data[i]);
+        sum += index * (i + 1);
+    }
+    const checkDigitIndex = sum % 62;
+    return randomCharacter[checkDigitIndex];
+}
+
+function IsAuthentic(data, decodedData) {
+    const originalData = data.slice(0, -1);
+    const providedCheckDigit = data.slice(-1);
+    const expectedCheckDigit = calculateCheckDigit(originalData);
+    if (providedCheckDigit !== expectedCheckDigit) {
+        return false;
+    }
+
+    if (!(1 <= decodedData.grade <= 3)) {
+        return false;
+    } if (!(1 <= decodedData.classNum <= 7)) {
+        return false;
+    } if (!(1 <= decodedData.Number <= 42)) {
+        return false;
+    } if (!(0 <= decodedData.relation <= 4)) {
+        return false;
+    } if (!(1 <= parseInt(decodedData.performance.split('-')[0]) <= 3)) {
+        return false;
+    } if (!(1 <= parseInt(decodedData.performance.split('-')[1]) <= 7)) {
+        return false;
+    } if (!(1 <= parseInt(decodedData.time.replace('第', '').replace('公演', '')) <= 8)) {
+        return false;
+    }
+    return true;
 }

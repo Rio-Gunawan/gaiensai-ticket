@@ -9,12 +9,12 @@ $(function () {
     const params = url.searchParams;
     const QRData = params.get('id');
 
+    $("#copy-succeed").hide();
+
     if (!QRData) {
         alert('QRコードデータが見つかりません。正しいURLでアクセスしてください。');
         return;
     }
-
-    $("#copy-succeed").hide();
 
     $('#qrcode').empty();
     const _qrcode = new QRCode('qrcode', {
@@ -26,6 +26,12 @@ $(function () {
     $("#qrcode-data").text(QRData);
 
     const performanceData = decode(QRData);
+    if (!IsAuthentic(QRData, performanceData)) {
+        alert('不正なQRコードデータです。URLを確認してください。');
+        $('#about-performance').text('不正なQRコード');
+        $('#url').text('https://rio-gunawan.github.io/gaiensai-ticket/show.html?id=' + QRData).attr('href', './show.html?id=' + QRData);
+        return;
+    }
     $('#about-performance').text(performanceData.performance + ' ' + performanceData.time);
     $('#for-whom').text(performanceData.grade + '年' + performanceData.classNum + '組' + performanceData.Number + '番 ご' + performanceData.relation + '様');
     $('#url').text('https://rio-gunawan.github.io/gaiensai-ticket/show.html?id=' + QRData).attr('href', './show.html?id=' + QRData);
@@ -84,4 +90,40 @@ function decode(data) {
             break;
     }
     return performanceData;
+}
+
+function calculateCheckDigit(data) {
+    let sum = 0;
+    for (let i = 0; i < data.length; i++) {
+        const index = randomCharacter.indexOf(data[i]);
+        sum += index * (i + 1);
+    }
+    const checkDigitIndex = sum % 62;
+    return randomCharacter[checkDigitIndex];
+}
+
+function IsAuthentic(data, decodedData) {
+    const originalData = data.slice(0, -1);
+    const providedCheckDigit = data.slice(-1);
+    const expectedCheckDigit = calculateCheckDigit(originalData);
+    if (providedCheckDigit !== expectedCheckDigit) {
+        return false;
+    }
+
+    if (!(1 <= decodedData.grade <= 3)) {
+        return false;
+    } if (!(1 <= decodedData.classNum <= 7)) {
+        return false;
+    } if (!(1 <= decodedData.Number <= 42)) {
+        return false;
+    } if (!(0 <= decodedData.relation <= 4)) {
+        return false;
+    } if (!(1 <= parseInt(decodedData.performance.split('-')[0]) <= 3)) {
+        return false;
+    } if (!(1 <= parseInt(decodedData.performance.split('-')[1]) <= 7)) {
+        return false;
+    } if (!(1 <= parseInt(decodedData.time.replace('第', '').replace('公演', '')) <= 8)) {
+        return false;
+    }
+    return true;
 }
