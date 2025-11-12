@@ -39,7 +39,7 @@ function addResultItem(codeType, codeData) {
     const timeStr = now.toLocaleTimeString();
 
     const performanceData = decode(codeData);
-    if (IsAuthentic(codeData, performanceData)) {
+    if (IsAuthentic(performanceData)) {
         $('#result').removeClass('invalid');
         $("#result h2").text('読み取り成功');
         $('#about-performance').text(performanceData.performance + ' ' + performanceData.time);
@@ -50,6 +50,7 @@ function addResultItem(codeType, codeData) {
         $('#result').addClass('invalid');
         $("#result h2").text('読み取り失敗');
         $('#about-performance').text('無効なQRコード');
+        $('#for-whom').text('---');
         $('#timestamp').text('読み取り時刻: ' + timeStr);
         $('.guide-message').text('このQRコードは無効です。係員にお問い合わせください。');
     }
@@ -91,9 +92,9 @@ window.addEventListener('beforeunload', () => {
 
 function decode(data) {
     let result = 0;
-    data = data.slice(1, -1); // チェックディジットを除去
-    for (let i = 0; i < data.length; i++) {
-        const char = data[i];
+    const payload = data.slice(1, -1); // 先頭と末尾のチェックディジットを除去
+    for (let i = 0; i < payload.length; i++) {
+        const char = payload[i];
         const index = randomCharacter.indexOf(char);
         result = result * 62 + index;
     }
@@ -108,7 +109,10 @@ function decode(data) {
         Number: (id % 100),
         relation: Math.floor((result % 10000) / 1000),
         performance: (Math.floor(performanceRawData / 7) + 1) + '-' + (performanceRawData % 7 + 1),
-        time: '第' + (result % 10) + '公演'
+        performanceId: performanceRawData,
+        time: '第' + (result % 10) + '公演',
+        raw: data,
+        relationRaw: Math.floor((result % 10000) / 1000)
     };
     switch (performanceData.relation) {
         case 0:
@@ -142,27 +146,25 @@ function calculateCheckDigit(data) {
     return randomCharacter[checkDigitIndex];
 }
 
-function IsAuthentic(data, decodedData) {
-    const originalData = data.slice(0, -1);
-    const providedCheckDigit = data.slice(-1);
+function IsAuthentic(decodedData) {
+    const originalData = decodedData.raw.slice(0, -1);
+    const providedCheckDigit = decodedData.raw.slice(-1);
     const expectedCheckDigit = calculateCheckDigit(originalData);
     if (providedCheckDigit !== expectedCheckDigit) {
         return false;
     }
 
-    if (!(1 <= decodedData.grade <= 3)) {
+    if (!(1 <= decodedData.grade && decodedData.grade <= 3)) {
         return false;
-    } if (!(1 <= decodedData.classNum <= 7)) {
+    } if (!(1 <= decodedData.classNum && decodedData.classNum <= 7)) {
         return false;
-    } if (!(1 <= decodedData.Number <= 42)) {
+    } if (!(1 <= decodedData.Number && decodedData.Number <= 42)) {
         return false;
-    } if (!(0 <= decodedData.relation <= 4)) {
+    } if (!(0 <= decodedData.relationRaw && decodedData.relationRaw <= 4)) {
         return false;
-    } if (!(1 <= parseInt(decodedData.performance.split('-')[0]) <= 3)) {
+    } if (!(0 <= decodedData.performanceId && decodedData.performanceId <= 20)) {
         return false;
-    } if (!(1 <= parseInt(decodedData.performance.split('-')[1]) <= 7)) {
-        return false;
-    } if (!(1 <= parseInt(decodedData.time.replace('第', '').replace('公演', '')) <= 8)) {
+    } if (!(1 <= parseInt(decodedData.time.replace('第', '').replace('公演', '')) && parseInt(decodedData.time.replace('第', '').replace('公演', '')) <= 8)) {
         return false;
     }
     return true;

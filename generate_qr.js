@@ -28,30 +28,7 @@ $('#generate').on('click', function() {
     let QRData = randomCharacter[(grade * classNum * number) % 62] + encrypt(ticketData);
     QRData = QRData + makeCheckDigit(QRData);
 
-    $("#outputs").show();
-    $('#qrcode').empty();
-    const _qrcode = new QRCode('qrcode', {
-        text: QRData,
-        width: 256,
-        height: 256,
-        correctLevel: QRCode.CorrectLevel.H
-    });
-    $("#qrcode-data").text(QRData);
-    $('#about-performance').text($('#performance option:selected').text() + ' ' + $('#time option:selected').text());
-    $('#for-whom').text(grade + '年' + classNum + '組' + number + '番 ご' + $('#relation option:selected').text() + '様');
-    $('#url').text('https://rio-gunawan.github.io/gaiensai-ticket/show.html?id=' + QRData).attr('href', './show.html?id=' + QRData);
-});
-
-$('#copy-url').on('click', function() {
-    const url = $('#url').text();
-    navigator.clipboard.writeText(url).then(function() {
-        $("#copy-succeed").show();
-        setTimeout(function() {
-            $("#copy-succeed").fadeOut(500);
-        }, 2000);
-    }, function(err) {
-        alert('URLのコピーに失敗しました: ', err);
-    });
+    window.location.href = './show.html?id=' + QRData;
 });
 
 function encrypt(data) {

@@ -21,12 +21,12 @@ $(function () {
         text: QRData,
         width: 256,
         height: 256,
-        correctLevel: QRCode.CorrectLevel.H
+        correctLevel: QRCode.CorrectLevel.Q
     });
     $("#qrcode-data").text(QRData);
 
     const performanceData = decode(QRData);
-    if (!IsAuthentic(QRData, performanceData)) {
+    if (!IsAuthentic(performanceData)) {
         alert('不正なQRコードデータです。URLを確認してください。');
         $('#about-performance').text('不正なQRコード');
         $('#url').text('https://rio-gunawan.github.io/gaiensai-ticket/show.html?id=' + QRData).attr('href', './show.html?id=' + QRData);
@@ -39,21 +39,28 @@ $(function () {
 
 $('#copy-url').on('click', function () {
     const url = $('#url').text();
-    navigator.clipboard.writeText(url).then(function () {
-        $("#copy-succeed").show();
-        setTimeout(function () {
-            $("#copy-succeed").fadeOut(500);
-        }, 2000);
-    }, function (err) {
-        alert('URLのコピーに失敗しました: ', err);
-    });
+    
+    // Clipboard API が利用可能かチェック
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(function () {
+            $("#copy-succeed").show();
+            setTimeout(function () {
+                $("#copy-succeed").fadeOut(500);
+            }, 2000);
+        }, function (err) {
+            alert('URLのコピーに失敗しました: ' + err);
+        });
+    } else {
+        // フォールバック: 従来の方法でコピー
+        copyToClipboardFallback(url);
+    }
 });
 
 function decode(data) {
     let result = 0;
-    data = data.slice(1, -1); // チェックディジットを除去
-    for (let i = 0; i < data.length; i++) {
-        const char = data[i];
+    const payload = data.slice(1, -1); // 先頭と末尾のチェックディジットを除去
+    for (let i = 0; i < payload.length; i++) {
+        const char = payload[i];
         const index = randomCharacter.indexOf(char);
         result = result * 62 + index;
     }
@@ -67,8 +74,11 @@ function decode(data) {
         classNum: Math.floor((id % 1000) / 100),
         Number: (id % 100),
         relation: Math.floor((result % 10000) / 1000),
-        performance: (Math.floor(performanceRawData/ 7) + 1) + '-' + (performanceRawData % 7 + 1),
-        time: '第' + (result % 10) + '公演'
+        performance: (Math.floor(performanceRawData / 7) + 1) + '-' + (performanceRawData % 7 + 1),
+        performanceId: performanceRawData,
+        time: '第' + (result % 10) + '公演',
+        raw: data,
+        relationRaw: Math.floor((result % 10000) / 1000)
     };
     switch (performanceData.relation) {
         case 0:
@@ -102,28 +112,47 @@ function calculateCheckDigit(data) {
     return randomCharacter[checkDigitIndex];
 }
 
-function IsAuthentic(data, decodedData) {
-    const originalData = data.slice(0, -1);
-    const providedCheckDigit = data.slice(-1);
+function IsAuthentic(decodedData) {
+    const originalData = decodedData.raw.slice(0, -1);
+    const providedCheckDigit = decodedData.raw.slice(-1);
     const expectedCheckDigit = calculateCheckDigit(originalData);
     if (providedCheckDigit !== expectedCheckDigit) {
         return false;
     }
 
-    if (!(1 <= decodedData.grade <= 3)) {
+    if (!(1 <= decodedData.grade && decodedData.grade <= 3)) {
         return false;
-    } if (!(1 <= decodedData.classNum <= 7)) {
+    } if (!(1 <= decodedData.classNum && decodedData.classNum <= 7)) {
         return false;
-    } if (!(1 <= decodedData.Number <= 42)) {
+    } if (!(1 <= decodedData.Number && decodedData.Number <= 42)) {
         return false;
-    } if (!(0 <= decodedData.relation <= 4)) {
+    } if (!(0 <= decodedData.relationRaw && decodedData.relationRaw <= 4)) {
         return false;
-    } if (!(1 <= parseInt(decodedData.performance.split('-')[0]) <= 3)) {
+    } if (!(0 <= decodedData.performanceId && decodedData.performanceId <= 20)) {
         return false;
-    } if (!(1 <= parseInt(decodedData.performance.split('-')[1]) <= 7)) {
-        return false;
-    } if (!(1 <= parseInt(decodedData.time.replace('第', '').replace('公演', '')) <= 8)) {
+    } if (!(1 <= parseInt(decodedData.time.replace('第', '').replace('公演', '')) && parseInt(decodedData.time.replace('第', '').replace('公演', '')) <= 8)) {
         return false;
     }
     return true;
+}
+
+// Clipboard API のフォールバック処理
+function copyToClipboardFallback(text) {
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    textarea.style.position = 'fixed';
+    textarea.style.opacity = '0';
+    document.body.appendChild(textarea);
+    textarea.select();
+    try {
+        document.execCommand('copy');
+        $("#copy-succeed").show();
+        setTimeout(function () {
+            $("#copy-succeed").fadeOut(500);
+        }, 2000);
+    } catch (err) {
+        alert('URLのコピーに失敗しました: ' + err);
+    } finally {
+        document.body.removeChild(textarea);
+    }
 }
