@@ -28,6 +28,7 @@ $(function () {
     const performanceData = decode(QRData);
     $('#about-performance').text(performanceData.performance + ' ' + performanceData.time);
     $('#for-whom').text(performanceData.grade + '年' + performanceData.classNum + '組' + performanceData.Number + '番 ご' + performanceData.relation + '様');
+    $('#url').text('https://rio-gunawan.github.io/gaiensai-ticket/show.html?id=' + QRData).attr('href', './show.html?id=' + QRData);
 });
 
 $('#copy-url').on('click', function () {
@@ -68,7 +69,7 @@ function decode(data) {
             performanceData.relation = '本人';
             break;
         case 1:
-            performanceData.relation = '保護者';
+            performanceData.relation = '家族';
             break;
         case 2:
             performanceData.relation = '友人';

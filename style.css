@@ -229,20 +229,20 @@ div#qrcode {
     position: fixed;
     z-index: 999;
     background-color: white;
-    width: 70vw;
+    width: 80vw;
     height: 70vh;
     top: 15vh;
-    left: 15vw;
+    left: 10vw;
     padding: 30px;
 }
 
 .performance-data-container {
     position: fixed;
     z-index: 9999;
-    width: 70vw;
+    width: 80vw;
     height: 70vh;
     top: 15vh;
-    left: 15vw;
+    left: 10vw;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -259,6 +259,7 @@ div#qrcode {
 #result p {
     text-align: left;
     font-size: 1.5em;
+    color: var(--text-color);
 }
 
 .guide-message {

@@ -4,10 +4,10 @@ const randomCharacter = ['R', 'p', 'D', 'C', 'z', 'H', 'S', 'd', 'J', 'Z',
     'B', 'M', 'c', 'F', 'o', 'Y', 'g', 'h', 'u', 'A', '1', 'y', 'P', 'Q',
     'V', 'N', 'e', 'j', 'm', 'L', '4', '5', 'f', 'i'];
 
+const html5QrCode = new Html5Qrcode("reader");
+
 $(function () {
     $('#result').hide();
-    const html5QrCode = new Html5Qrcode("reader");
-    let scanning = false;
 
     const qrCodeSuccessCallback = (decodedText, decodedResult) => {
         const codeType = decodedResult.result.format.formatName;
@@ -15,7 +15,7 @@ $(function () {
     };
 
     const config = {
-        fps: 1,    // １秒間に何回スキャンするか
+        fps: 4,    // １秒間に何回スキャンするか
         qrbox: { width: 500, height: 500 },
         formatsToSupport: [
             // 1次元コード
@@ -28,8 +28,6 @@ $(function () {
         config,
         qrCodeSuccessCallback
     ).then(() => {
-        scanning = true;
-
     }).catch(err => {
         alert("カメラのアクセスに失敗しました: " + err);
     });
@@ -43,6 +41,7 @@ function addResultItem(codeType, codeData) {
     const performanceData = decode(codeData);
     $('#about-performance').text(performanceData.performance + ' ' + performanceData.time);
     $('#for-whom').text(performanceData.grade + '年' + performanceData.classNum + '組' + performanceData.Number + '番 ご' + performanceData.relation + '様');
+    $('#timestamp').text('読み取り時刻: ' + timeStr);
     $('#result').fadeIn(100);
     // 読み取り音を再生（オプション）
     playBeepSound();
@@ -105,7 +104,7 @@ function decode(data) {
             performanceData.relation = '本人';
             break;
         case 1:
-            performanceData.relation = '保護者';
+            performanceData.relation = '家族';
             break;
         case 2:
             performanceData.relation = '友人';
