@@ -40,12 +40,14 @@ function addResultItem(codeType, codeData) {
 
     const performanceData = decode(codeData);
     if (IsAuthentic(codeData, performanceData)) {
+        $('#result').removeClass('invalid');
         $("#result h2").text('読み取り成功');
         $('#about-performance').text(performanceData.performance + ' ' + performanceData.time);
         $('#for-whom').text(performanceData.grade + '年' + performanceData.classNum + '組' + performanceData.Number + '番 ご' + performanceData.relation + '様');
         $('#timestamp').text('読み取り時刻: ' + timeStr);
         $('.guide-message').text('ようこそ!外苑祭へ。係員の案内に従って、ご入場ください。');
     } else {
+        $('#result').addClass('invalid');
         $("#result h2").text('読み取り失敗');
         $('#about-performance').text('無効なQRコード');
         $('#timestamp').text('読み取り時刻: ' + timeStr);

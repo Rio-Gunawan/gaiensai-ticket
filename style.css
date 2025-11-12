@@ -12,6 +12,8 @@
     --hover-color: #e2edf9;
     --tab-color: #f5f5f5;
     --shadow-color: #37373759;
+    --error-background: #ffe6e6;
+    --succeed-background: #e6ffe6;
 }
 
 * {
@@ -228,7 +230,7 @@ div#qrcode {
 #result {
     position: fixed;
     z-index: 999;
-    background-color: white;
+    background-color: var(--succeed-background);
     width: 80vw;
     height: 70vh;
     top: 15vh;
@@ -250,6 +252,10 @@ div#qrcode {
     padding-left: 6em;
 }
 
+#result h2 {
+    color: green;
+}
+
 #result h3 {
     margin: 0;
     font-size: 4em;
@@ -267,4 +273,17 @@ div#qrcode {
     bottom: 1em;
     right: 1em;
     font-weight: bold;
+}
+
+#result.invalid {
+    border: 5px solid red;
+    background-color: var(--error-background);
+}
+
+#result.invalid h2 {
+    color: red;
+}
+
+#result.invalid h3 {
+    color: red;
 }
