@@ -72,9 +72,12 @@ function decode(data) {
             performanceData.relation = '家族';
             break;
         case 2:
-            performanceData.relation = '友人';
+            performanceData.relation = '友人（青高生）';
             break;
         case 3:
+            performanceData.relation = '友人（外部）';
+            break;
+        case 4:
             performanceData.relation = 'その他';
             break;
         default:
