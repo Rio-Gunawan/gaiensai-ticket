@@ -32,14 +32,14 @@ $(function () {
         $('#url').text('https://rio-gunawan.github.io/gaiensai-ticket/show.html?id=' + QRData).attr('href', './show.html?id=' + QRData);
         return;
     }
-    $('#about-performance').text(performanceData.performance + ' ' + performanceData.time);
+    $('#about-performance').text(performanceData.performance + ' 第' + performanceData.time + '公演');
     $('#for-whom').text(performanceData.grade + '年' + performanceData.classNum + '組' + performanceData.Number + '番 ご' + performanceData.relation + '様');
     $('#url').text('https://rio-gunawan.github.io/gaiensai-ticket/show.html?id=' + QRData).attr('href', './show.html?id=' + QRData);
 });
 
 $('#copy-url').on('click', function () {
     const url = $('#url').text();
-    
+
     // Clipboard API が利用可能かチェック
     if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(url).then(function () {
@@ -76,7 +76,7 @@ function decode(data) {
         relation: Math.floor((result % 10000) / 1000),
         performance: (Math.floor(performanceRawData / 7) + 1) + '-' + (performanceRawData % 7 + 1),
         performanceId: performanceRawData,
-        time: '第' + (result % 10) + '公演',
+        time: result % 10,
         raw: data,
         relationRaw: Math.floor((result % 10000) / 1000)
     };

@@ -6,12 +6,31 @@ const randomCharacter = ['R', 'p', 'D', 'C', 'z', 'H', 'S', 'd', 'J', 'Z',
 
 const html5QrCode = new Html5Qrcode("reader");
 
+// GETパラメータからクラスを読み取る関数
+function getClassFromUrlParameter() {
+    const params = new URLSearchParams(window.location.search);
+    const classParam = params.get('class');
+
+    if (classParam !== null) {
+        const classValue = parseInt(classParam);
+        if (!isNaN(classValue) && ((classValue >= 0 && classValue <= 20) || classValue === 21)) {
+            return classValue;
+        }
+    }
+    // パラメータが設定されていない場合または無効な場合は校内入場を返す
+    return 21;
+}
+
 $(function () {
     $('#result').hide();
 
+    // GETパラメータからクラスを設定
+    const classValue = getClassFromUrlParameter();
+    $('#classSelect').val(classValue);
+
     const qrCodeSuccessCallback = (decodedText, decodedResult) => {
         const codeType = decodedResult.result.format.formatName;
-        addResultItem(codeType, decodedText);
+        showResult(codeType, decodedText);
     };
 
     const config = {
@@ -34,18 +53,40 @@ $(function () {
 });
 
 
-function addResultItem(codeType, codeData) {
+function showResult(codeType, codeData) {
     const now = new Date();
     const timeStr = now.toLocaleTimeString();
 
     const performanceData = decode(codeData);
+
+    const classToCheck = Number($('#classSelect').val());
+    const timeToCheck = Number($('#timeSelect').val());
+
     if (IsAuthentic(performanceData)) {
-        $('#result').removeClass('invalid');
-        $("#result h2").text('読み取り成功');
-        $('#about-performance').text(performanceData.performance + ' ' + performanceData.time);
-        $('#for-whom').text(performanceData.grade + '年' + performanceData.classNum + '組' + performanceData.Number + '番 ご' + performanceData.relation + '様');
-        $('#timestamp').text('読み取り時刻: ' + timeStr);
-        $('.guide-message').text('ようこそ!外苑祭へ。係員の案内に従って、ご入場ください。');
+        if (classToCheck === 21) {
+            $('#result').removeClass('invalid');
+            $("#result h2").text('読み取り成功');
+            $('#about-performance').text(performanceData.performance + ' 第' + performanceData.time + '公演');
+            $('#for-whom').text(performanceData.grade + '年' + performanceData.classNum + '組' + performanceData.Number + '番 ご' + performanceData.relation + '様');
+            $('#timestamp').text('読み取り時刻: ' + timeStr);
+            $('.guide-message').text('ようこそ!外苑祭へ。係員の案内に従って、ご入場ください。');
+        } else {
+            if (performanceData.performanceId === classToCheck && performanceData.time === timeToCheck) {
+                $('#result').removeClass('invalid');
+                $("#result h2").text('読み取り成功');
+                $('#about-performance').text(performanceData.performance + ' 第' + performanceData.time + '公演');
+                $('#for-whom').text(performanceData.grade + '年' + performanceData.classNum + '組' + performanceData.Number + '番 ご' + performanceData.relation + '様');
+                $('#timestamp').text('読み取り時刻: ' + timeStr);
+                $('.guide-message').text('ようこそ!係員の案内に従って、ご入場ください。');
+            } else {
+                $('#result').addClass('invalid');
+                $("#result h2").text('読み取り失敗');
+                $('#about-performance').text(performanceData.performance + ' 第' + performanceData.time + '公演');
+                $('#for-whom').text('このQRコードは別のクラスまたは公演回のものです。');
+                $('#timestamp').text('読み取り時刻: ' + timeStr);
+                $('.guide-message').text('正しいクラスか、または正しいQRコードであるかご確認ください。');
+            }
+        }
     } else {
         $('#result').addClass('invalid');
         $("#result h2").text('読み取り失敗');
@@ -110,7 +151,7 @@ function decode(data) {
         relation: Math.floor((result % 10000) / 1000),
         performance: (Math.floor(performanceRawData / 7) + 1) + '-' + (performanceRawData % 7 + 1),
         performanceId: performanceRawData,
-        time: '第' + (result % 10) + '公演',
+        time: result % 10,
         raw: data,
         relationRaw: Math.floor((result % 10000) / 1000)
     };
@@ -164,7 +205,7 @@ function IsAuthentic(decodedData) {
         return false;
     } if (!(0 <= decodedData.performanceId && decodedData.performanceId <= 20)) {
         return false;
-    } if (!(1 <= parseInt(decodedData.time.replace('第', '').replace('公演', '')) && parseInt(decodedData.time.replace('第', '').replace('公演', '')) <= 8)) {
+    } if (!(1 <= decodedData.time && decodedData.time <= 8)) {
         return false;
     }
     return true;
