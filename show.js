@@ -130,7 +130,7 @@ function IsAuthentic(decodedData) {
         return false;
     } if (!(0 <= decodedData.performanceId && decodedData.performanceId <= 20)) {
         return false;
-    } if (!(1 <= parseInt(decodedData.time.replace('第', '').replace('公演', '')) && parseInt(decodedData.time.replace('第', '').replace('公演', '')) <= 8)) {
+    } if (!(1 <= decodedData.time && decodedData.time <= 8)) {
         return false;
     }
     return true;
