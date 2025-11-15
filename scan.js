@@ -26,6 +26,8 @@ const ScannedQRData = getScannedQRData();
 $(function () {
     $('#result').hide();
 
+    let facingMode = 'user';
+
     // GETパラメータからクラスを設定
     const classValue = getClassFromUrlParameter();
     $('#classSelect').val(classValue);
@@ -45,18 +47,41 @@ $(function () {
     };
 
     html5QrCode.start(
-        { facingMode: "user" },
+        { facingMode: facingMode },
         config,
         qrCodeSuccessCallback
     ).then(() => {
     }).catch(err => {
         alert("カメラのアクセスに失敗しました: " + err);
     });
+
+    $('#camera_switch').on('click', function () {
+        html5QrCode.stop().then(() => {
+            if (facingMode === 'user') {
+                facingMode = 'environment';
+            } else {
+                facingMode = 'user';
+            }
+
+            html5QrCode.start(
+                { facingMode: facingMode },
+                config,
+                qrCodeSuccessCallback
+            ).then(() => {
+            }).catch(err => {
+                alert("カメラのアクセスに失敗しました: " + err);
+            });
+        }).catch(err => {
+            alert("カメラの停止に失敗しました: " + err);
+        });
+    });
 });
 
 
 function showResult(codeType, codeData) {
-    html5QrCode.pause();
+    html5QrCode.pause().catch(_err => {
+        // スキャンの一時停止失敗時は無視
+    });
 
     const now = new Date();
     const dateTimeStr = now.toLocaleString();
@@ -144,7 +169,9 @@ function showResult(codeType, codeData) {
     playBeepSound();
     setTimeout(() => {
         $('#result').fadeOut(500);
-        html5QrCode.resume();
+        html5QrCode.resume().catch(_err => {
+            // スキャンの再開失敗時は無視
+        });
     }, 3000);
 
 }

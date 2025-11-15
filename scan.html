@@ -22,42 +22,47 @@
         <h1><img src="./images/icho_background.svg" alt="アイコン">チケット読み取り</h1>
     </header>
     <div class="mode">
-        <label>使用するクラス</label>
-        <select id="classSelect">
-            <option value="21" selected>校内入場</option>
-            <option value="0">1-1</option>
-            <option value="1">1-2</option>
-            <option value="2">1-3</option>
-            <option value="3">1-4</option>
-            <option value="4">1-5</option>
-            <option value="5">1-6</option>
-            <option value="6">1-7</option>
-            <option value="7">2-1</option>
-            <option value="8">2-2</option>
-            <option value="9">2-3</option>
-            <option value="10">2-4</option>
-            <option value="11">2-5</option>
-            <option value="12">2-6</option>
-            <option value="13">2-7</option>
-            <option value="14">3-1</option>
-            <option value="15">3-2</option>
-            <option value="16">3-3</option>
-            <option value="17">3-4</option>
-            <option value="18">3-5</option>
-            <option value="19">3-6</option>
-            <option value="20">3-7</option>
-        </select>
-        <label>受付する公演回</label>
-        <select id="timesSelect">
-            <option value="1" selected>第1公演</option>
-            <option value="2">第2公演</option>
-            <option value="3">第3公演</option>
-            <option value="4">第4公演</option>
-            <option value="5">第5公演</option>
-            <option value="6">第6公演</option>
-            <option value="7">第7公演</option>
-            <option value="8">第8公演</option>
-        </select>
+        <div>
+            <label>使用するクラス</label>
+            <select id="classSelect">
+                <option value="21" selected>校内入場</option>
+                <option value="0">1-1</option>
+                <option value="1">1-2</option>
+                <option value="2">1-3</option>
+                <option value="3">1-4</option>
+                <option value="4">1-5</option>
+                <option value="5">1-6</option>
+                <option value="6">1-7</option>
+                <option value="7">2-1</option>
+                <option value="8">2-2</option>
+                <option value="9">2-3</option>
+                <option value="10">2-4</option>
+                <option value="11">2-5</option>
+                <option value="12">2-6</option>
+                <option value="13">2-7</option>
+                <option value="14">3-1</option>
+                <option value="15">3-2</option>
+                <option value="16">3-3</option>
+                <option value="17">3-4</option>
+                <option value="18">3-5</option>
+                <option value="19">3-6</option>
+                <option value="20">3-7</option>
+            </select>
+            <label>公演回</label>
+            <select id="timesSelect">
+                <option value="1" selected>第1公演</option>
+                <option value="2">第2公演</option>
+                <option value="3">第3公演</option>
+                <option value="4">第4公演</option>
+                <option value="5">第5公演</option>
+                <option value="6">第6公演</option>
+                <option value="7">第7公演</option>
+                <option value="8">第8公演</option>
+            </select>
+        </div>
+        <div>
+            <a href="./history.html" class="history-button">読み取り履歴</a>
+        </div>
     </div>
     <div class="reader-container">
         <div id="reader"></div>
@@ -71,6 +76,7 @@
         </div>
         <p class="guide-message"></p>
     </div>
+    <button id="camera_switch" class="img-button"><img src="./images/cameraswitch.svg"></button>
     <script src="./lib/jquery-3.7.1.min.js"></script>
     <script src="./lib/html5-qrcode.min.js"></script>
     <script src="./main.js"></script>

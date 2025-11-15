@@ -208,17 +208,27 @@ div#qrcode {
 
 .mode {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 1em;
+    flex-direction: column;
+    align-items: flex-end;
     position: fixed;
     right: 1em;
     z-index: 99;
     margin: 15px 0;
-    padding: 5px 15px;
+    padding: 5px 20px;
     border-radius: 30px;
     box-shadow: 0px 3px 10px 0px var(--shadow-color);
     background-color: var(--tab-color);
+}
+
+.mode div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1em;
+}
+
+.mode a {
+    color: var(--dark-gray);
 }
 
 .mode select {
@@ -463,4 +473,20 @@ tr:has(.reentry-cell) {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     /* iOSでの慣性スクロールを有効に */
+}
+
+.img-button {
+    position: fixed;
+    bottom: 1em;
+    right: 1em;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    background-color: var(--light-gray);
+}
+
+.img-button img {
+    width: 2em;
 }
