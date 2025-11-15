@@ -21,6 +21,8 @@ function getClassFromUrlParameter() {
     return 21;
 }
 
+const ScannedQRData = getScannedQRData();
+
 $(function () {
     $('#result').hide();
 
@@ -54,52 +56,95 @@ $(function () {
 
 
 function showResult(codeType, codeData) {
+    html5QrCode.pause();
+
     const now = new Date();
-    const timeStr = now.toLocaleTimeString();
+    const dateTimeStr = now.toLocaleString();
 
     const performanceData = decode(codeData);
 
     const classToCheck = Number($('#classSelect').val());
     const timeToCheck = Number($('#timeSelect').val());
 
+    localStorage.setItem('numberOfScans', (Number(localStorage.getItem('numberOfScans') || '0') + 1).toString());
+
     if (IsAuthentic(performanceData)) {
         if (classToCheck === 21) {
-            $('#result').removeClass('invalid');
-            $("#result h2").text('読み取り成功');
-            $('#about-performance').text(performanceData.performance + ' 第' + performanceData.time + '公演');
-            $('#for-whom').text(performanceData.grade + '年' + performanceData.classNum + '組' + performanceData.Number + '番 ご' + performanceData.relation + '様');
-            $('#timestamp').text('読み取り時刻: ' + timeStr);
-            $('.guide-message').text('ようこそ!外苑祭へ。係員の案内に従って、ご入場ください。');
-        } else {
-            if (performanceData.performanceId === classToCheck && performanceData.time === timeToCheck) {
-                $('#result').removeClass('invalid');
+            if (ScannedQRData.includes(codeData)) {
+                $('#result').removeClass('invalid').addClass('reentry');
+                $("#result h2").text('読み取り成功(再入場)');
+                $('#about-performance').text(performanceData.performance + ' 第' + performanceData.time + '公演');
+                $('#for-whom').text(performanceData.grade + '年' + performanceData.classNum + '組' + performanceData.Number + '番 ご' + performanceData.relation + '様 (再入場)');
+                $('#timestamp').text('読み取り日時: ' + dateTimeStr);
+                $('.guide-message').text('ようこそ!外苑祭へ。係員の案内に従って、ご入場ください。');
+
+                localStorage.setItem(localStorage.getItem('numberOfScans').toString(), dateTimeStr + '-' + codeData + '-reentry');
+            } else {
+                $('#result').removeClass('invalid reentry');
                 $("#result h2").text('読み取り成功');
                 $('#about-performance').text(performanceData.performance + ' 第' + performanceData.time + '公演');
                 $('#for-whom').text(performanceData.grade + '年' + performanceData.classNum + '組' + performanceData.Number + '番 ご' + performanceData.relation + '様');
-                $('#timestamp').text('読み取り時刻: ' + timeStr);
-                $('.guide-message').text('ようこそ!係員の案内に従って、ご入場ください。');
+                $('#timestamp').text('読み取り日時: ' + dateTimeStr);
+                $('.guide-message').text('ようこそ!外苑祭へ。係員の案内に従って、ご入場ください。');
+
+                localStorage.setItem('numberOfVisitors', (Number(localStorage.getItem('numberOfVisitors') || '0') + 1).toString());
+                localStorage.setItem(localStorage.getItem('numberOfScans').toString(), dateTimeStr + '-' + codeData + '-valid');
+            }
+
+            ScannedQRData.push(codeData);
+            localStorage.setItem('numberOfValidScans', (Number(localStorage.getItem('numberOfValidScans') || '0') + 1).toString());
+        } else {
+            if (performanceData.performanceId === classToCheck && performanceData.time === timeToCheck) {
+                if (ScannedQRData.includes(codeData)) {
+                    $('#result').removeClass('invalid').addClass('reentry');
+                    $("#result h2").text('読み取り成功(再入場)');
+                    $('#about-performance').text(performanceData.performance + ' 第' + performanceData.time + '公演');
+                    $('#for-whom').text(performanceData.grade + '年' + performanceData.classNum + '組' + performanceData.Number + '番 ご' + performanceData.relation + '様 (再入場)');
+                    $('#timestamp').text('読み取り日時: ' + dateTimeStr);
+                    $('.guide-message').text('ようこそ!外苑祭へ。係員の案内に従って、ご入場ください。');
+
+                    localStorage.setItem(localStorage.getItem('numberOfScans').toString(), dateTimeStr + '-' + codeData + '-reentry');
+                } else {
+                    $('#result').removeClass('invalid reentry');
+                    $("#result h2").text('読み取り成功');
+                    $('#about-performance').text(performanceData.performance + ' 第' + performanceData.time + '公演');
+                    $('#for-whom').text(performanceData.grade + '年' + performanceData.classNum + '組' + performanceData.Number + '番 ご' + performanceData.relation + '様');
+                    $('#timestamp').text('読み取り日時: ' + dateTimeStr);
+                    $('.guide-message').text('ようこそ!外苑祭へ。係員の案内に従って、ご入場ください。');
+                    localStorage.setItem('numberOfVisitors', (Number(localStorage.getItem('numberOfVisitors') || '0') + 1).toString());
+
+                    localStorage.setItem(localStorage.getItem('numberOfScans').toString(), dateTimeStr + '-' + codeData + '-valid');
+                }
+
+                ScannedQRData.push(codeData);
+                localStorage.setItem('numberOfValidScans', (Number(localStorage.getItem('numberOfValidScans') || '0') + 1).toString());
             } else {
-                $('#result').addClass('invalid');
+                $('#result').addClass('invalid').removeClass('reentry');
                 $("#result h2").text('読み取り失敗');
                 $('#about-performance').text(performanceData.performance + ' 第' + performanceData.time + '公演');
                 $('#for-whom').text('このQRコードは別のクラスまたは公演回のものです。');
-                $('#timestamp').text('読み取り時刻: ' + timeStr);
+                $('#timestamp').text('読み取り日時: ' + dateTimeStr);
                 $('.guide-message').text('正しいクラスか、または正しいQRコードであるかご確認ください。');
+
+                localStorage.setItem(localStorage.getItem('numberOfScans').toString(), dateTimeStr + '-' + codeData + '-invalid');
             }
         }
     } else {
-        $('#result').addClass('invalid');
+        $('#result').addClass('invalid').removeClass('reentry');
         $("#result h2").text('読み取り失敗');
         $('#about-performance').text('無効なQRコード');
         $('#for-whom').text('---');
-        $('#timestamp').text('読み取り時刻: ' + timeStr);
+        $('#timestamp').text('読み取り日時: ' + dateTimeStr);
         $('.guide-message').text('このQRコードは無効です。係員にお問い合わせください。');
+
+        localStorage.setItem(localStorage.getItem('numberOfScans').toString(), dateTimeStr + '-' + codeData + '-invalid');
     }
     $('#result').fadeIn(100);
     // 読み取り音を再生（オプション）
     playBeepSound();
     setTimeout(() => {
         $('#result').fadeOut(500);
+        html5QrCode.resume();
     }, 3000);
 
 }
@@ -115,7 +160,7 @@ function playBeepSound() {
 
     oscillator.type = 'sine';
     oscillator.frequency.value = 1000; // 周波数
-    gainNode.gain.value = 0.1; // 音量
+    gainNode.gain.value = 0.5; // 音量
 
     oscillator.start();
     oscillator.stop(context.currentTime + 0.1);
@@ -209,4 +254,17 @@ function IsAuthentic(decodedData) {
         return false;
     }
     return true;
+}
+
+function getScannedQRData() {
+    const qrDataList = [];
+    const numberOfScans = Number(localStorage.getItem('numberOfScans') || '0');
+
+    for (let i = 1; i <= numberOfScans; i++) {
+        const item = localStorage.getItem(i.toString()).split('-')[1];
+        if (item) {
+            qrDataList.push(item);
+        }
+    }
+    return qrDataList;
 }

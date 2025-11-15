@@ -287,3 +287,16 @@ div#qrcode {
 #result.invalid h3 {
     color: red;
 }
+
+#result.reentry {
+    border: 5px solid var(--dark-gray);
+    background-color: var(--medium-gray);
+}
+
+#result.reentry h2 {
+    color: var(--text-color);
+}
+
+#result.reentry h3 {
+    color: var(--text-color);
+}
