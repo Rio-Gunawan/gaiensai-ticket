@@ -131,6 +131,7 @@ button {
     border-radius: 5px;
     font-size: 1.2em;
     cursor: pointer;
+    box-shadow: 5px 5px 10px 0px var(--shadow-color);
     transition: opacity 0.3s;
 }
 
@@ -475,6 +476,7 @@ tr:has(.reentry-cell) {
     /* iOSでの慣性スクロールを有効に */
 }
 
+/* 画像入りのボタン */
 .img-button {
     position: fixed;
     bottom: 1em;
@@ -489,4 +491,62 @@ tr:has(.reentry-cell) {
 
 .img-button img {
     width: 2em;
+}
+
+/* テキストのみのボタン */
+.text-button {
+    position: fixed;
+    padding: 0;
+    background: none;
+    text-decoration: underline;
+    box-shadow: none;
+}
+
+#input_directory {
+    bottom: 1em;
+    left: 2em;
+}
+
+#input-directory-dialog {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    z-index: 999;
+    background-color: var(--tab-color);
+    width: 60vw;
+    height: 50vh;
+    top: 25vh;
+    left: 20vw;
+    padding: 30px;
+}
+
+#input-directory-dialog div {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#input-directory-dialog p {
+    text-align: center;
+}
+
+#close-window {
+    position: absolute;
+    right: 1em;
+    top: 1em;
+}
+
+#close-window img {
+    width: 2em;
+}
+
+input[type="text"] {
+    display: block;
+    width: 80%;
+    padding: 10px;
+    margin: 20px auto;
+    border: 1px solid var(--medium-gray);
+    border-radius: 5px;
+    font-size: 1em;
 }

@@ -76,7 +76,19 @@
         </div>
         <p class="guide-message"></p>
     </div>
-    <button id="camera_switch" class="img-button"><img src="./images/cameraswitch.svg"></button>
+    <div id="input-directory-dialog">
+        <button class="text-button" id="close-window"><img src="./images/close.svg" alt="閉じる"></button>
+        <div>
+            <h2>手動で入力</h2>
+        </div>
+        <div>
+            <p>QRコードの下にある英数字を入力してください。</p>
+            <input type="text" id="qrInput" name="qrInput">
+            <button id="input-directory-summit">確定</button>
+        </div>
+    </div>
+    <button id="input_directory" class="text-button">手動で入力</button>
+    <button id="camera_switch" class="img-button"><img src="./images/cameraswitch.svg" alt="カメラ切り替え"></button>
     <script src="./lib/jquery-3.7.1.min.js"></script>
     <script src="./lib/html5-qrcode.min.js"></script>
     <script src="./main.js"></script>

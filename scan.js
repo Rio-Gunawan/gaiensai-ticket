@@ -25,6 +25,7 @@ const ScannedQRData = getScannedQRData();
 
 $(function () {
     $('#result').hide();
+    $('#input-directory-dialog').hide();
 
     let facingMode = 'user';
 
@@ -75,13 +76,28 @@ $(function () {
             alert("カメラの停止に失敗しました: " + err);
         });
     });
+
+    // ディレクトリ入力ダイアログを開く
+    $('#input_directory').on('click', function () {
+        $('#input-directory-dialog').fadeIn(100);
+    });
+
+    // ディレクトリ入力ダイアログを閉じる
+    $('#close-window').on('click', function () {
+        $('#input-directory-dialog').fadeOut(100);
+    });
+
+    $('#input-directory-summit').on('click', function () {
+        const inputDirectory = $('#qrInput').val();
+        $('#input-directory-dialog').hide();
+        $('#qrInput').val('');
+        showResult('', inputDirectory);
+    });
 });
 
 
 function showResult(codeType, codeData) {
-    html5QrCode.pause().catch(_err => {
-        // スキャンの一時停止失敗時は無視
-    });
+    html5QrCode.pause();
 
     const now = new Date();
     const dateTimeStr = now.toLocaleString();
@@ -169,9 +185,7 @@ function showResult(codeType, codeData) {
     playBeepSound();
     setTimeout(() => {
         $('#result').fadeOut(500);
-        html5QrCode.resume().catch(_err => {
-            // スキャンの再開失敗時は無視
-        });
+        html5QrCode.resume();
     }, 3000);
 
 }
