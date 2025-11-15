@@ -50,8 +50,8 @@ $(function () {
         });
 
         // スキャン履歴リスト
-        let count = 1;
-        scannedData.forEach(data => {
+        let count = scannedData.length;
+        [...scannedData].reverse().forEach(data => {
             let row = `<tr>
             <td>${count}</td>
             <td>${data.timestamp}</td>
@@ -74,9 +74,43 @@ $(function () {
             }
             row += `</tr>`;
             $('#history-table tbody').append(row);
-            count++;
+            count--;
         });
     }
+
+    $('#delate-all').on('click', () => {
+        if (confirm('一度削除したデータは復元できません。故意にデータを削除した場合、失格になる可能性もあります。本当に削除してもよろしいですか？')) {
+            localStorage.clear();
+            location.reload();
+        }
+    });
+
+    $('#download-csv').on('click', () => {
+        let count = 1;
+        const csv = scannedData.map(data => {
+            let row = count + `,${data.timestamp},${data.raw}`;
+            if (data.isValid === 'valid') {
+                row += `,${data.id},${data.relation},${data.performance},第${data.times}公演,有効`;
+            } else if (data.isValid === 'reentry') {
+                row += `,${data.id},${data.relation},${data.performance},第${data.times}公演,再入場`;
+            } else {
+                row += `,-,-,-,-,無効`;
+            }
+            count++;
+            return row;
+        });
+        csv.unshift('番号,日時,QRコードのデータ,招待者のID,関係,公演のクラス,公演回,有効性');
+        const csvString = csv.join('\n');
+        const bom = new Uint8Array([0xef, 0xbb, 0xbf]);
+        const blob = new Blob([bom, csvString], { type: "text/csv" });
+        const link = document.createElement('a');
+        link.download = 'scan_history.csv';
+        link.href = URL.createObjectURL(blob);
+        link.click();
+
+        //createObjectURLで作成したオブジェクトURLを開放する
+        URL.revokeObjectURL(link.href);
+    });
 });
 
 function decode(data) {

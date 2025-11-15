@@ -572,3 +572,18 @@ input[type="text"] {
     border-radius: 5px;
     font-size: 1em;
 }
+
+#delate-all {
+    background-color: var(--tab-color);
+    color: red;
+    border: 1px solid red;
+    font-weight: bold;
+}
+
+.buttons-menu {
+    position: absolute;
+    top: 10px;
+    right: 2em;
+    display: flex;
+    gap: 1em;
+}
