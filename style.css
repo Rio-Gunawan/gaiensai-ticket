@@ -15,6 +15,8 @@
     --shadow-color: #37373759;
     --error-background: #ffe6e6;
     --succeed-background: #e6ffe6;
+    --succeed-film-background: #23452345;
+    --error-film-background: #a4000045;
 }
 
 * {
@@ -141,6 +143,24 @@ button {
     button:hover {
         opacity: 0.7;
     }
+}
+
+.film {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9;
+    transition: background 0.3s;
+}
+
+.film.success {
+    background-color: var(--succeed-film-background);
+}
+
+.film.error {
+    background-color: var(--error-film-background);
 }
 
 div#qrcode {
@@ -487,6 +507,7 @@ tr:has(.reentry-cell) {
     align-items: center;
     border-radius: 50%;
     background-color: var(--light-gray);
+    z-index: 999;
 }
 
 .img-button img {
@@ -505,6 +526,7 @@ tr:has(.reentry-cell) {
 #input_directory {
     bottom: 1em;
     left: 2em;
+    z-index: 999;
 }
 
 #input-directory-dialog {

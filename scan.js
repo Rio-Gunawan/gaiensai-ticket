@@ -122,6 +122,7 @@ function showResult(codeType, codeData) {
                 localStorage.setItem(localStorage.getItem('numberOfScans').toString(), dateTimeStr + '-' + codeData + '-reentry');
             } else {
                 $('#result').removeClass('invalid reentry');
+                $('.film').addClass('success');
                 $("#result h2").text('読み取り成功');
                 $('#about-performance').text(performanceData.performance + ' 第' + performanceData.times + '公演');
                 $('#for-whom').text(performanceData.grade + '年' + performanceData.classNum + '組' + performanceData.Number + '番 ご' + performanceData.relation + '様');
@@ -147,6 +148,7 @@ function showResult(codeType, codeData) {
                     localStorage.setItem(localStorage.getItem('numberOfScans').toString(), dateTimeStr + '-' + codeData + '-reentry');
                 } else {
                     $('#result').removeClass('invalid reentry');
+                    $('.film').addClass('success');
                     $("#result h2").text('読み取り成功');
                     $('#about-performance').text(performanceData.performance + ' 第' + performanceData.times + '公演');
                     $('#for-whom').text(performanceData.grade + '年' + performanceData.classNum + '組' + performanceData.Number + '番 ご' + performanceData.relation + '様');
@@ -161,6 +163,7 @@ function showResult(codeType, codeData) {
                 localStorage.setItem('numberOfValidScans', (Number(localStorage.getItem('numberOfValidScans') || '0') + 1).toString());
             } else {
                 $('#result').addClass('invalid').removeClass('reentry');
+                $('.film').addClass('error');
                 $("#result h2").text('読み取り失敗');
                 $('#about-performance').text(performanceData.performance + ' 第' + performanceData.times + '公演');
                 $('#for-whom').text('このQRコードは別のクラスまたは公演回のものです。');
@@ -172,6 +175,7 @@ function showResult(codeType, codeData) {
         }
     } else {
         $('#result').addClass('invalid').removeClass('reentry');
+        $('.film').addClass('error');
         $("#result h2").text('読み取り失敗');
         $('#about-performance').text('無効なQRコード');
         $('#for-whom').text('---');
@@ -185,6 +189,7 @@ function showResult(codeType, codeData) {
     playBeepSound();
     setTimeout(() => {
         $('#result').fadeOut(500);
+        $('.film').removeClass('success error');
         html5QrCode.resume();
     }, 3000);
 
