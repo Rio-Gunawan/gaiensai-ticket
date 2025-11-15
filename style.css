@@ -7,6 +7,7 @@
     --main-color: #13203a;
     --text-color: #444444;
     --light-gray: #f0f0f0;
+    --medium-light-gray: #cdcdcd;
     --medium-gray: #b0b0b0;
     --dark-gray: #5c5c5c;
     --hover-color: #e2edf9;
@@ -33,7 +34,6 @@ body {
     background-color: var(--light-gray);
 }
 
-h1,
 h2,
 h3,
 h4,
@@ -44,7 +44,9 @@ h6 {
 }
 
 header {
-    margin: 15px;
+    width: max-content;
+    margin: 10px;
+    margin-left: min(4vw, 3em);
     padding: 15px;
     border-radius: 30px;
     background-color: var(--tab-color);
@@ -52,12 +54,8 @@ header {
 }
 
 .scan-header {
-    font-size: 0.6em;
     text-align: center;
-    padding: 15px;
-    margin-bottom: 10px;
     position: fixed;
-    left: 3em;
     z-index: 99;
 }
 
@@ -66,7 +64,8 @@ header {
 }
 
 h1 {
-    font-size: 2em;
+    color: var(--main-color);
+    font-size: 1.2em;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -299,4 +298,169 @@ div#qrcode {
 
 #result.reentry h3 {
     color: var(--text-color);
+}
+
+/* タブメニューのデザイン */
+
+/*タブ切り替え全体のスタイル*/
+.tabs {
+    width: 94vw;
+    margin: 20px auto;
+}
+
+/*タブのスタイル*/
+.tab_items {
+    width: max-content;
+    display: flex;
+    box-shadow: -2px -1px 10px 0px var(--shadow-color);
+}
+
+.tab_item {
+    border-bottom: 3px solid var(--main-color);
+    background-color: var(--medium-gray);
+    color: var(--dark-gray);
+    padding: 12px 2em;
+    cursor: pointer;
+    text-align: center;
+    font-weight: bold;
+    transition: 0.2s ease;
+    transition-property: background, opacity, color;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .tab_item:hover {
+        opacity: 0.7;
+    }
+}
+
+/*ラジオボタンを全て消す*/
+input[name="tab_item"] {
+    display: none;
+}
+
+/*タブ切り替えの中身のスタイル*/
+.tab_content {
+    background-color: var(--tab-color);
+    box-shadow: 0px 3px 10px 0px var(--shadow-color);
+    display: none;
+    padding: 20px 3vw;
+    clear: both;
+    overflow: hidden;
+}
+
+
+/*選択されているタブのコンテンツのみを表示*/
+.tabs:has(#summary:checked) #summary_content {
+    display: block;
+}
+
+.tabs:has(#list:checked) #list_content {
+    display: block;
+}
+
+/*選択されているタブのスタイルを変える*/
+.tabs input:checked+.tab_item {
+    background-color: var(--main-color);
+    color: #fff;
+}
+
+.summary-blocks-container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 2em;
+}
+
+.summary-block {
+    display: block;
+    background-color: white;
+    padding: 20px 10px;
+    border-radius: 30px;
+    box-shadow: 0px 3px 10px 0px var(--shadow-color);
+    margin-bottom: 20px;
+}
+
+.summary-block p {
+    text-align: center;
+    margin: 0 4rem;
+}
+
+.summary-block p:has(.small) {
+    margin: 0 2rem;
+}
+
+.summary-block h3 {
+    font-size: 1.3em;
+}
+
+.summary-number {
+    font-size: 10em;
+    font-weight: bold;
+    color: var(--main-color);
+    margin: 0 1rem;
+    line-height: 6rem;
+}
+
+.summary-number.small {
+    font-size: 6em;
+    line-height: 4rem;
+}
+
+/* 表のスタイル */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th,
+td {
+    border: 1px solid var(--medium-gray);
+    padding: 10px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+th {
+    background-color: var(--main-color);
+    color: white;
+    font-weight: normal;
+}
+
+tr:nth-child(even) {
+    background-color: var(--light-gray);
+}
+
+tr:nth-child(odd) {
+    background-color: white;
+}
+
+.valid-cell {
+    color: green;
+}
+
+.reentry-cell {
+    background-color: var(--dark-gray);
+    color: white;
+}
+
+.invalid-cell {
+    color: white;
+    background-color: red;
+    font-weight: bold;
+}
+
+tr:has(.invalid-cell) {
+    background-color: var(--error-background);
+}
+
+tr:has(.reentry-cell) {
+    background-color: var(--medium-light-gray);
+}
+
+.tab_content {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    /* iOSでの慣性スクロールを有効に */
 }

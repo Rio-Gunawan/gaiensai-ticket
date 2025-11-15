@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style.css">
+    <meta http-equiv="default-style" content="./style.css">
+
+    <link rel="shortcut icon" href="./favicon.ico" type="image/vnd.microsoft.icon" />
+    <link rel="icon" href="./favicon.ico" type="image/vnd.microsoft.icon" />
+    <link rel="apple-touch-icon" href="./imgs/apple-touch-icon.png">
+
+    <meta name="description" content="QRコードを用いた外苑祭チケットシステム">
+    <meta name="author" content="Rio Gunawan">
+    <title>チケット読み取り履歴 | 外苑祭チケットシステム</title>
+
+</head>
+
+<body>
+    <header>
+        <h1><img src="./images/icho_background.svg" alt="アイコン">チケット読み取り履歴</h1>
+    </header>
+    <div class="tabs">
+        <div class="tab_items">
+            <input id="summary" type="radio" name="tab_item" checked>
+            <label class="tab_item" for="summary">サマリー</label>
+            <input id="list" type="radio" name="tab_item">
+            <label class="tab_item" for="list">一覧</label>
+        </div>
+        <div class="tab_content" id="summary_content">
+            <h2>校内全体</h2>
+            <div class="summary-blocks-container">
+                <div class="summary-block">
+                    <h3>来場者数</h3>
+                    <p><span class="summary-number" id="total-visitors">0</span>名</p>
+                </div>
+                <div class="summary-block">
+                    <h3>総読み取り数</h3>
+                    <p><span class="summary-number" id="total-scans">0</span>回
+                        (内 再入場:<span class="summary-number small" id="reentry-scans">0</span>回、エラー:<span
+                            class="summary-number small" id="invalid-scans">0</span>回)</p>
+                </div>
+            </div>
+            <h2>クラスごとの来場者数</h2>
+            <div class="summary-blocks-container" id="visitors-of-classes">
+                <!-- クラスごとの来場者数がここに入る -->
+            </div>
+            <h2>公演回ごとの来場者数</h2>
+            <div class="summary-blocks-container" id="visitors-of-times">
+                <!-- 公演回ごとの来場者数がここに入る -->
+            </div>
+            <h2>関係ごとの来場者数</h2>
+            <div class="summary-blocks-container" id="visitors-relationships">
+                <!-- 関係ごとの来場者数がここに入る -->
+            </div>
+        </div>
+        <div class="tab_content" id="list_content">
+            <table id="history-table">
+                <thead>
+                    <tr>
+                        <th>番号</th>
+                        <th>日時</th>
+                        <th>QRコードのデータ</th>
+                        <th>招待者のID</th>
+                        <th>関係</th>
+                        <th>公演のクラス</th>
+                        <th>公演回</th>
+                        <th>有効性</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- 履歴データがここに入る -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="./lib/jquery-3.7.1.min.js"></script>
+    <script src="main.js"></script>
+    <script src="./history.js"></script>
+</body>
+
+</html>

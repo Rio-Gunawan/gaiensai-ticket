@@ -64,7 +64,7 @@ function showResult(codeType, codeData) {
     const performanceData = decode(codeData);
 
     const classToCheck = Number($('#classSelect').val());
-    const timeToCheck = Number($('#timeSelect').val());
+    const timesToCheck = Number($('#timesSelect').val());
 
     localStorage.setItem('numberOfScans', (Number(localStorage.getItem('numberOfScans') || '0') + 1).toString());
 
@@ -73,7 +73,7 @@ function showResult(codeType, codeData) {
             if (ScannedQRData.includes(codeData)) {
                 $('#result').removeClass('invalid').addClass('reentry');
                 $("#result h2").text('読み取り成功(再入場)');
-                $('#about-performance').text(performanceData.performance + ' 第' + performanceData.time + '公演');
+                $('#about-performance').text(performanceData.performance + ' 第' + performanceData.times + '公演');
                 $('#for-whom').text(performanceData.grade + '年' + performanceData.classNum + '組' + performanceData.Number + '番 ご' + performanceData.relation + '様 (再入場)');
                 $('#timestamp').text('読み取り日時: ' + dateTimeStr);
                 $('.guide-message').text('ようこそ!外苑祭へ。係員の案内に従って、ご入場ください。');
@@ -82,7 +82,7 @@ function showResult(codeType, codeData) {
             } else {
                 $('#result').removeClass('invalid reentry');
                 $("#result h2").text('読み取り成功');
-                $('#about-performance').text(performanceData.performance + ' 第' + performanceData.time + '公演');
+                $('#about-performance').text(performanceData.performance + ' 第' + performanceData.times + '公演');
                 $('#for-whom').text(performanceData.grade + '年' + performanceData.classNum + '組' + performanceData.Number + '番 ご' + performanceData.relation + '様');
                 $('#timestamp').text('読み取り日時: ' + dateTimeStr);
                 $('.guide-message').text('ようこそ!外苑祭へ。係員の案内に従って、ご入場ください。');
@@ -94,11 +94,11 @@ function showResult(codeType, codeData) {
             ScannedQRData.push(codeData);
             localStorage.setItem('numberOfValidScans', (Number(localStorage.getItem('numberOfValidScans') || '0') + 1).toString());
         } else {
-            if (performanceData.performanceId === classToCheck && performanceData.time === timeToCheck) {
+            if (performanceData.performanceId === classToCheck && performanceData.times === timesToCheck) {
                 if (ScannedQRData.includes(codeData)) {
                     $('#result').removeClass('invalid').addClass('reentry');
                     $("#result h2").text('読み取り成功(再入場)');
-                    $('#about-performance').text(performanceData.performance + ' 第' + performanceData.time + '公演');
+                    $('#about-performance').text(performanceData.performance + ' 第' + performanceData.times + '公演');
                     $('#for-whom').text(performanceData.grade + '年' + performanceData.classNum + '組' + performanceData.Number + '番 ご' + performanceData.relation + '様 (再入場)');
                     $('#timestamp').text('読み取り日時: ' + dateTimeStr);
                     $('.guide-message').text('ようこそ!外苑祭へ。係員の案内に従って、ご入場ください。');
@@ -107,7 +107,7 @@ function showResult(codeType, codeData) {
                 } else {
                     $('#result').removeClass('invalid reentry');
                     $("#result h2").text('読み取り成功');
-                    $('#about-performance').text(performanceData.performance + ' 第' + performanceData.time + '公演');
+                    $('#about-performance').text(performanceData.performance + ' 第' + performanceData.times + '公演');
                     $('#for-whom').text(performanceData.grade + '年' + performanceData.classNum + '組' + performanceData.Number + '番 ご' + performanceData.relation + '様');
                     $('#timestamp').text('読み取り日時: ' + dateTimeStr);
                     $('.guide-message').text('ようこそ!外苑祭へ。係員の案内に従って、ご入場ください。');
@@ -121,7 +121,7 @@ function showResult(codeType, codeData) {
             } else {
                 $('#result').addClass('invalid').removeClass('reentry');
                 $("#result h2").text('読み取り失敗');
-                $('#about-performance').text(performanceData.performance + ' 第' + performanceData.time + '公演');
+                $('#about-performance').text(performanceData.performance + ' 第' + performanceData.times + '公演');
                 $('#for-whom').text('このQRコードは別のクラスまたは公演回のものです。');
                 $('#timestamp').text('読み取り日時: ' + dateTimeStr);
                 $('.guide-message').text('正しいクラスか、または正しいQRコードであるかご確認ください。');
@@ -196,7 +196,7 @@ function decode(data) {
         relation: Math.floor((result % 10000) / 1000),
         performance: (Math.floor(performanceRawData / 7) + 1) + '-' + (performanceRawData % 7 + 1),
         performanceId: performanceRawData,
-        time: result % 10,
+        times: result % 10,
         raw: data,
         relationRaw: Math.floor((result % 10000) / 1000)
     };
@@ -250,7 +250,7 @@ function IsAuthentic(decodedData) {
         return false;
     } if (!(0 <= decodedData.performanceId && decodedData.performanceId <= 20)) {
         return false;
-    } if (!(1 <= decodedData.time && decodedData.time <= 8)) {
+    } if (!(1 <= decodedData.times && decodedData.times <= 8)) {
         return false;
     }
     return true;

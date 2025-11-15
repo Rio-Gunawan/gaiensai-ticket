@@ -15,15 +15,15 @@ $('#generate').on('click', function() {
 
     const relation = $('#relation').val();
     const performance = $('#performance').val();
-    const time = $('#time').val();
+    const times = $('#times').val();
 
-    if (!grade || !classNum || !number || !relation || !performance || !time) {
+    if (!grade || !classNum || !number || !relation || !performance || !times) {
         alert('すべてのフィールドを入力してください。');
         return;
     }
 
     const idNum = grade * 1000 + classNum * 100 + number;
-    const ticketData = idNum * 10000 + Number(relation) * 1000 + Number(performance) * 10 + Number(time);
+    const ticketData = idNum * 10000 + Number(relation) * 1000 + Number(performance) * 10 + Number(times);
 
     let QRData = randomCharacter[(grade * classNum * number) % 62] + encrypt(ticketData);
     QRData = QRData + makeCheckDigit(QRData);
