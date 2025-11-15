@@ -168,7 +168,7 @@ function showResult(codeType, codeData) {
                 $('#about-performance').text(performanceData.performance + ' 第' + performanceData.times + '公演');
                 $('#for-whom').text('このQRコードは別のクラスまたは公演回のものです。');
                 $('#timestamp').text('読み取り日時: ' + dateTimeStr);
-                $('.guide-message').text('正しいクラスか、または正しいQRコードであるかご確認ください。');
+                $('.guide-message').text('正しいクラス、正しいQRコードであるかご確認ください。');
 
                 localStorage.setItem(localStorage.getItem('numberOfScans').toString(), dateTimeStr + '-' + codeData + '-invalid');
             }
