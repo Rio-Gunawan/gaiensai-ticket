@@ -22,10 +22,31 @@ $('#generate').on('click', function() {
         return;
     }
 
+    if (!IsAuthentic(grade, classNum, number)) {
+        alert('入力項目に誤りがあります。');
+        return;
+    }
+
     const idNum = grade * 1000 + classNum * 100 + number;
     const ticketData = idNum * 10000 + Number(relation) * 1000 + Number(performance) * 10 + Number(times);
 
-    let QRData = randomCharacter[(grade * classNum * number) % 62] + encrypt(ticketData);
+    let QRData = encrypt(ticketData);
+
+    if (Number(localStorage.getItem('numberOfMake-' + QRData) || '0') >= 62) {
+        alert('QRコード生成の上限に達しました。他のクラス・回の公演を選択するか、外苑祭総務にお問い合わせください。');
+        return;
+    }
+
+    localStorage.setItem('numberOfMake-' + QRData, (Number(localStorage.getItem('numberOfMake-' + QRData) || '0') + 1).toString());
+
+    const startNum = (grade * classNum * number + relation + performance + times) % 62;
+    let addNum = ((classNum * times + number) % 31) * 2 + 1;
+    if (addNum === 1 || addNum === 31) {
+        addNum += 2;
+    }
+
+    QRData = randomCharacter[(startNum + addNum * (Number(localStorage.getItem('numberOfMake-' + QRData)) - 1)) % 62] + QRData;
+
     QRData = QRData + makeCheckDigit(QRData);
 
     window.location.href = './show.html?id=' + QRData;
@@ -50,4 +71,15 @@ function makeCheckDigit(data) {
     }
     const checkDigitIndex = sum % 62;
     return randomCharacter[checkDigitIndex];
+}
+
+function IsAuthentic(grade, classNum, number) {
+    if (!(1 <= grade && grade <= 3)) {
+        return false;
+    } if (!(1 <= classNum && classNum <= 7)) {
+        return false;
+    } if (!(1 <= number && number <= 42)) {
+        return false;
+    }
+    return true;
 }
