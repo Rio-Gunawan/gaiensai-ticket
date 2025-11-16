@@ -119,7 +119,7 @@ function showResult(codeType, codeData) {
                 $('#timestamp').text('読み取り日時: ' + dateTimeStr);
                 $('.guide-message').text('ようこそ!外苑祭へ。係員の案内に従って、ご入場ください。');
 
-                localStorage.setItem(localStorage.getItem('numberOfScans').toString(), dateTimeStr + '-' + codeData + '-reentry');
+                localStorage.setItem(localStorage.getItem('numberOfScans').toString(), dateTimeStr + '-' + codeData + '-' + classToCheck + '-' + timesToCheck + '-reentry');
             } else {
                 $('#result').removeClass('invalid reentry');
                 $('.film').addClass('success');
@@ -130,7 +130,7 @@ function showResult(codeType, codeData) {
                 $('.guide-message').text('ようこそ!外苑祭へ。係員の案内に従って、ご入場ください。');
 
                 localStorage.setItem('numberOfVisitors', (Number(localStorage.getItem('numberOfVisitors') || '0') + 1).toString());
-                localStorage.setItem(localStorage.getItem('numberOfScans').toString(), dateTimeStr + '-' + codeData + '-valid');
+                localStorage.setItem(localStorage.getItem('numberOfScans').toString(), dateTimeStr + '-' + codeData + '-' + classToCheck + '-' + timesToCheck + '-valid');
             }
 
             ScannedQRData.push(codeData);
@@ -145,7 +145,7 @@ function showResult(codeType, codeData) {
                     $('#timestamp').text('読み取り日時: ' + dateTimeStr);
                     $('.guide-message').text('ようこそ!外苑祭へ。係員の案内に従って、ご入場ください。');
 
-                    localStorage.setItem(localStorage.getItem('numberOfScans').toString(), dateTimeStr + '-' + codeData + '-reentry');
+                    localStorage.setItem(localStorage.getItem('numberOfScans').toString(), dateTimeStr + '-' + codeData + '-' + classToCheck + '-' + timesToCheck + '-reentry');
                 } else {
                     $('#result').removeClass('invalid reentry');
                     $('.film').addClass('success');
@@ -156,7 +156,7 @@ function showResult(codeType, codeData) {
                     $('.guide-message').text('ようこそ!外苑祭へ。係員の案内に従って、ご入場ください。');
                     localStorage.setItem('numberOfVisitors', (Number(localStorage.getItem('numberOfVisitors') || '0') + 1).toString());
 
-                    localStorage.setItem(localStorage.getItem('numberOfScans').toString(), dateTimeStr + '-' + codeData + '-valid');
+                    localStorage.setItem(localStorage.getItem('numberOfScans').toString(), dateTimeStr + '-' + codeData + '-' + classToCheck + '-' + timesToCheck + '-valid');
                 }
 
                 ScannedQRData.push(codeData);
@@ -170,7 +170,7 @@ function showResult(codeType, codeData) {
                 $('#timestamp').text('読み取り日時: ' + dateTimeStr);
                 $('.guide-message').text('正しいクラス、正しいQRコードであるかご確認ください。');
 
-                localStorage.setItem(localStorage.getItem('numberOfScans').toString(), dateTimeStr + '-' + codeData + '-invalid');
+                localStorage.setItem(localStorage.getItem('numberOfScans').toString(), dateTimeStr + '-' + codeData + '-' + classToCheck + '-' + timesToCheck + '-invalid');
             }
         }
     } else {
@@ -182,7 +182,7 @@ function showResult(codeType, codeData) {
         $('#timestamp').text('読み取り日時: ' + dateTimeStr);
         $('.guide-message').text('このQRコードは無効です。係員にお問い合わせください。');
 
-        localStorage.setItem(localStorage.getItem('numberOfScans').toString(), dateTimeStr + '-' + codeData + '-invalid');
+        localStorage.setItem(localStorage.getItem('numberOfScans').toString(), dateTimeStr + '-' + codeData + '-' + classToCheck + '-' + timesToCheck + '-invalid');
     }
     $('#result').fadeIn(100);
     // 読み取り音を再生（オプション）

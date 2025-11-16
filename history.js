@@ -61,15 +61,18 @@ $(function () {
                     <td>${data.relation}</td>
                     <td>${data.performance}</td>
                     <td>第${data.times}公演</td>
+                    <td>${data.mode}</td>
                     <td class="valid-cell">有効</td>`;
             } else if (data.isValid === 'reentry') {
                 row += `<td>${data.id}</td>
                     <td>${data.relation}</td>
                     <td>${data.performance}</td>
                     <td>第${data.times}公演</td>
+                    <td>${data.mode}</td>
                     <td class="reentry-cell">再入場</td>`;
             } else {
                 row += `<td colspan="4">-</td>
+                    <td>${data.mode}</td>
                     <td class="invalid-cell">無効</td>`;
             }
             row += `</tr>`;
@@ -90,16 +93,16 @@ $(function () {
         const csv = scannedData.map(data => {
             let row = count + `,${data.timestamp},${data.raw}`;
             if (data.isValid === 'valid') {
-                row += `,${data.id},${data.relation},${data.performance},第${data.times}公演,有効`;
+                row += `,${data.id},${data.relation},${data.performance},第${data.times}公演,${data.mode},有効`;
             } else if (data.isValid === 'reentry') {
-                row += `,${data.id},${data.relation},${data.performance},第${data.times}公演,再入場`;
+                row += `,${data.id},${data.relation},${data.performance},第${data.times}公演,${data.mode},再入場`;
             } else {
-                row += `,-,-,-,-,無効`;
+                row += `,-,-,-,-,${data.mode},無効`;
             }
             count++;
             return row;
         });
-        csv.unshift('番号,日時,QRコードのデータ,招待者のID,関係,公演のクラス,公演回,有効性');
+        csv.unshift('番号,日時,QRコードのデータ,招待者のID,関係,公演のクラス,公演回,スキャン時のモード,有効性');
         const csvString = csv.join('\n');
         const bom = new Uint8Array([0xef, 0xbb, 0xbf]);
         const blob = new Blob([bom, csvString], { type: "text/csv" });
@@ -131,7 +134,7 @@ function decode(data) {
         classNum: Math.floor((id % 1000) / 100),
         Number: (id % 100),
         relation: Math.floor((result % 10000) / 1000),
-        performance: (Math.floor(performanceRawData / 7) + 1) + '-' + (performanceRawData % 7 + 1),
+        performance: (Math.floor(performanceRawData / 7) + 1) + '年' + (performanceRawData % 7 + 1) + '組',
         performanceId: performanceRawData,
         times: result % 10,
         raw: data,
@@ -169,7 +172,9 @@ function getQRCodeData() {
         const data = localStorage.getItem(i + 1).split('-');
         const r = {};
         r['timestamp'] = data[0];
-        r['isValid'] = data[2];
+        r['mode'] = Number(data[2]) === 21 ? '校内入場' :
+            Math.floor(Number(data[2]) / 7) + 1 + '-' + (Number(data[2]) % 7 + 1) + ' 第' + data[3] + '公演';
+        r['isValid'] = data[4];
         if (data[2] === 'invalid') {
             r['raw'] = data[1];
         } else {
