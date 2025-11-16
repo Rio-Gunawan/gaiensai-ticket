@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 
-<head>
+<head prefix="og: https://ogp.me/ns#">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./style.css">
@@ -11,9 +11,17 @@
     <link rel="icon" href="./favicon.ico" type="image/vnd.microsoft.icon" />
     <link rel="apple-touch-icon" href="./imgs/apple-touch-icon.png">
 
-    <meta name="description" content="QRコードを用いた外苑祭チケットシステム">
+    <meta name="description" content="QRコードを用いた外苑祭チケットシステムの履歴です。チケットを発行して、URLを共有することで他の人にも共有ができます。読み取り履歴機能もついています。">
     <meta name="author" content="Rio Gunawan">
+    <meta name="theme-color" content="#13203a">
     <title>チケット読み取り履歴 | 外苑祭チケットシステム</title>
+
+    <meta property="og:site_name" content="外苑祭チケットシステム" />
+    <meta property="og:title" content="チケット読み取り履歴 | 外苑祭チケットシステム" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://rio-gunawan.github.io/gaiensai-ticket/history.html" />
+    <meta property="og:image" content="https://rio-gunawan.github.io/gaiensai-ticket/images/ogp.png" />
+    <meta property="og:description" content="QRコードを用いた外苑祭チケットシステムの履歴です。チケットを発行して、URLを共有することで他の人にも共有ができます。読み取り履歴機能もついています。" />
 
 </head>
 
@@ -79,6 +87,27 @@
             </table>
         </div>
     </div>
+    <footer>
+        <div class="footer-container">
+            <div class="footer-links">
+                <ul>
+                    <li><a href="./index.html">トップ</a></li>
+                    <li><a href="./issue.html">チケット発券</a></li>
+                    <li><a href="./scan.html">チケット読み取り</a></li>
+                </ul>
+                <ul>
+                    <li><a href="./history.html">読み取り履歴</a></li>
+                    <li><a href="mailto:ribbongrapes@gmail.com">お問い合わせ</a></li>
+                    <li><a href="https://github.com/Rio-Gunawan/gaiensai-ticket">ソースコード</a></li>
+                </ul>
+            </div>
+            <div>
+                <p>外苑祭チケットシステム ver. 0.1</p>
+                <p>最終更新日: 2025/11/16</p>
+                <p>&copy; 2025 Rio Gunawan. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
     <script src="./lib/jquery-3.7.1.min.js"></script>
     <script src="main.js"></script>
     <script src="./history.js"></script>
