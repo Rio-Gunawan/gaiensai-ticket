@@ -26,6 +26,7 @@ const ScannedQRData = getScannedQRData();
 $(function () {
     $('#result').hide();
     $('#input-directory-dialog').hide();
+    $('.attribute').hide();
 
     let facingMode = 'user';
 
@@ -129,6 +130,12 @@ function showResult(codeType, codeData) {
                 $('#timestamp').text('読み取り日時: ' + dateTimeStr);
                 $('.guide-message').text('ようこそ!外苑祭へ。係員の案内に従って、ご入場ください。');
 
+                if (performanceData.relation === '家族') {
+                    $('.attribute').fadeIn(100);
+                    $('.attribute').addClass('g' + performanceData.grade);
+                    $('.attribute-grade span').text(performanceData.grade);
+                }
+
                 localStorage.setItem('numberOfVisitors', (Number(localStorage.getItem('numberOfVisitors') || '0') + 1).toString());
                 localStorage.setItem(localStorage.getItem('numberOfScans').toString(), dateTimeStr + '-' + codeData + '-' + classToCheck + '-' + timesToCheck + '-valid');
             }
@@ -190,6 +197,7 @@ function showResult(codeType, codeData) {
     setTimeout(() => {
         $('#result').fadeOut(500);
         $('.film').removeClass('success error');
+        $('.attribute').hide().removeClass('g1 g2 g3');
         html5QrCode.resume();
     }, 3000);
 

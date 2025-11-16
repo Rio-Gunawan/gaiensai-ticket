@@ -331,6 +331,54 @@ div#qrcode {
     color: var(--text-color);
 }
 
+.attribute {
+    display: flex;
+    position: fixed;
+    z-index: 9999;
+    width: 50vw;
+    height: 50vw;
+    bottom: -8vw;
+    left: -33vw;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    gap: 1em;
+    padding-left: 30vw;
+    border-radius: 50%;
+    color: white;
+}
+
+.attribute-line {
+    position: fixed;
+    z-index: 9999;
+    width: 100vw;
+    height: 20px;
+    left: 0;
+    bottom: 50px;
+}
+
+.attribute.g1, .attribute.g1 .attribute-line {
+    background-color: blue;
+}
+
+.attribute.g2, .attribute.g2 .attribute-line {
+    background-color: red;
+}
+
+.attribute.g3, .attribute.g3 .attribute-line{
+    background-color: green;
+}
+
+
+.attribute-grade {
+    font-size: 3em;
+}
+
+.attribute-relation {
+    font-size: 6em;
+    font-weight: bold;
+}
+
 /* タブメニューのデザイン */
 
 /*タブ切り替え全体のスタイル*/
