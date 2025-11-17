@@ -83,12 +83,12 @@ h1 img {
     text-align: center;
 }
 
-li {
-    margin: 10px 0;
+section ul {
+    margin: 10px 2em
 }
 
-.top-page-how-to-use {
-    margin: 20px 1em;
+li {
+    margin: 10px 0;
 }
 
 label {
