@@ -11,7 +11,8 @@
     <link rel="icon" href="./favicon.ico" type="image/vnd.microsoft.icon" />
     <link rel="apple-touch-icon" href="./imgs/apple-touch-icon.png">
 
-    <meta name="description" content="QRコードを用いた外苑祭チケットシステムの読み取りページです。チケットを発行して、URLを共有することで他の人にも共有ができます。読み取り履歴機能もついています。">
+    <meta name="description"
+        content="QRコードを用いた外苑祭チケットシステムの読み取りページです。チケットを発行して、URLを共有することで他の人にも共有ができます。読み取り履歴機能もついています。">
     <meta name="author" content="Rio Gunawan">
     <meta name="theme-color" content="#13203a">
     <title>チケット読み取り | 外苑祭チケットシステム</title>
@@ -21,7 +22,8 @@
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://rio-gunawan.github.io/gaiensai-ticket/scan.html" />
     <meta property="og:image" content="https://rio-gunawan.github.io/gaiensai-ticket/images/ogp.png" />
-    <meta property="og:description" content="QRコードを用いた外苑祭チケットシステムの読み取りページです。チケットを発行して、URLを共有することで他の人にも共有ができます。読み取り履歴機能もついています。" />
+    <meta property="og:description"
+        content="QRコードを用いた外苑祭チケットシステムの読み取りページです。チケットを発行して、URLを共有することで他の人にも共有ができます。読み取り履歴機能もついています。" />
 
 </head>
 
@@ -68,15 +70,7 @@
                 <option value="7">第7公演</option>
                 <option value="8">第8公演</option>
             </select>
-            <label>再生する音声</label>
-            <select id="soundSelect">
-                <option value="1" selected>音声1</option>
-                <option value="2">音声2</option>
-                <option value="3">音声3</option>
-            </select>
-        </div>
-        <div>
-            <a href="./history.html" class="history-button">読み取り履歴</a>
+            <button class="img-button" id="scan_settings"><img src="./images/settings.svg" alt="設定"></button>
         </div>
     </div>
     <div class="reader-container">
@@ -91,8 +85,42 @@
         </div>
         <p class="guide-message"></p>
     </div>
-    <div id="input-directory-dialog">
-        <button class="text-button" id="close-window"><img src="./images/close.svg" alt="閉じる"></button>
+    <div id="settings" class="dialog">
+        <h2>設定</h2>
+        <button class="text-button close-window" id="close-settings-window"><img src="./images/close.svg"
+                alt="閉じる"></button>
+        <div>
+            <input type="checkbox" class="toggle-switch-checkbox" id="sound-switch" name="sound-switch" checked>
+            <label for="sound-switch" class="toggle-switch-label"><span>効果音・音声</span></label>
+        </div>
+        <div>
+            <label>音声の種類</label>
+            <select id="soundSelect">
+                <option value="1" selected>音声1</option>
+                <option value="2">音声2</option>
+                <option value="3">音声3</option>
+                <option value="sound-effect-only">効果音のみ</option>
+            </select>
+        </div>
+        <div>
+            <label>関係が「家族」の場合、そのことを大きく表示</label>
+            <select id="attributeSelect">
+                <option value="1">常に</option>
+                <option value="2" selected>校内入場の時のみ</option>
+                <option value="3">オフ</option>
+            </select>
+        </div>
+        <div>
+            <input type="checkbox" class="toggle-switch-checkbox" id="attributeCheck" name="attributeCheck">
+            <label for="attributeCheck" class="toggle-switch-label"><span>再入場でも、関係が「家族」の場合、そのことを大きく表示</span></label>
+        </div>
+        <div>
+            <a href="./history.html" class="history-button">読み取り履歴</a>
+        </div>
+    </div>
+    <div id="input-directory-dialog" class="dialog">
+        <button class="text-button close-window" id="close-input-directory-window"><img src="./images/close.svg"
+                alt="閉じる"></button>
         <div>
             <h2>手動で入力</h2>
         </div>
@@ -103,7 +131,7 @@
         </div>
     </div>
     <div class="attribute">
-        <p class="attribute-grade"><span>1</span>年</p>
+        <p class="attribute-grade"><span></span>年</p>
         <p class="attribute-relation">保</p>
         <div class="attribute-line"></div>
     </div>

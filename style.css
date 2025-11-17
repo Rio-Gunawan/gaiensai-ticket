@@ -15,6 +15,7 @@
     --shadow-color: #37373759;
     --error-background: #ffe6e6;
     --succeed-background: #e6ffe6;
+    --film-background: #000000a0;
     --succeed-film-background: #23452345;
     --error-film-background: #a4000045;
 }
@@ -113,6 +114,17 @@ input[type="number"] {
     font-size: 1em;
 }
 
+input[type="checkbox"] {
+    width: 1em;
+    height: 1em;
+    cursor: pointer;
+    margin-right: 1em;
+}
+
+label:has(input[type="checkbox"]) {
+    cursor: pointer;
+}
+
 select {
     width: 100%;
     padding: 10px;
@@ -152,7 +164,11 @@ button {
     top: 0;
     left: 0;
     z-index: 9;
-    transition: background 0.3s;
+    transition: background 0.2s;
+}
+
+.film.show {
+    background-color: var(--film-background);
 }
 
 .film.success {
@@ -239,6 +255,7 @@ div#qrcode {
     border-radius: 30px;
     box-shadow: 0px 3px 10px 0px var(--shadow-color);
     background-color: var(--tab-color);
+    font-size: 0.85em;
 }
 
 .mode div {
@@ -246,10 +263,6 @@ div#qrcode {
     justify-content: center;
     align-items: center;
     gap: 1em;
-}
-
-.mode a {
-    color: var(--dark-gray);
 }
 
 .mode select {
@@ -357,15 +370,18 @@ div#qrcode {
     bottom: 50px;
 }
 
-.attribute.g1, .attribute.g1 .attribute-line {
+.attribute.g1,
+.attribute.g1 .attribute-line {
     background-color: blue;
 }
 
-.attribute.g2, .attribute.g2 .attribute-line {
+.attribute.g2,
+.attribute.g2 .attribute-line {
     background-color: red;
 }
 
-.attribute.g3, .attribute.g3 .attribute-line{
+.attribute.g3,
+.attribute.g3 .attribute-line {
     background-color: green;
 }
 
@@ -546,21 +562,95 @@ tr:has(.reentry-cell) {
 
 /* 画像入りのボタン */
 .img-button {
-    position: fixed;
-    bottom: 1em;
-    right: 1em;
-    padding: 20px;
+    padding: 1em;
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 50%;
-    background-color: var(--light-gray);
     z-index: 999;
 }
 
-.img-button img {
+#camera_switch {
+    background-color: var(--tab-color);
+    position: fixed;
+    bottom: 1em;
+    right: 1em;
+}
+
+#camera_switch img {
     width: 2em;
 }
+
+#scan_settings {
+    padding: 10px;
+}
+
+#scan_settings img {
+    width: 1em;
+}
+
+/* ===============================================
+   トグルスイッチ
+   =============================================== */
+.toggle-switch-label {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+    cursor: pointer;
+    padding-right: 50px;
+    /* スイッチの幅 + 余白 */
+}
+
+/* 元のチェックボックスは非表示に */
+.toggle-switch-checkbox {
+    display: none;
+}
+
+/* スイッチの土台（トラック） */
+.toggle-switch-label::before {
+    content: '';
+    position: absolute;
+    right: 0;
+    width: 44px;
+    height: 24px;
+    background-color: #ccc;
+    border-radius: 12px;
+    transition: background-color 0.2s ease-in-out;
+}
+
+/* スイッチのつまみ */
+.toggle-switch-label::after {
+    content: '';
+    position: absolute;
+    right: 22px;
+    /* (トラック幅 44px - つまみ幅 20px) / 2 = 12px の位置からスタートするため、右から22px */
+    width: 20px;
+    height: 20px;
+    background-color: white;
+    border-radius: 50%;
+    transition: transform 0.2s ease-in-out;
+}
+
+/* チェックされた時のスタイル */
+.toggle-switch-checkbox:checked+.toggle-switch-label::before {
+    background-color: var(--main-color);
+    /* オンになった時の色 */
+}
+
+.toggle-switch-checkbox:checked+.toggle-switch-label::after {
+    transform: translateX(20px);
+    /* 右に20px移動 */
+    /* つまみを右に移動 */
+}
+
+/* disabled状態のスタイル */
+.toggle-switch-checkbox:disabled+.toggle-switch-label {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
 
 /* テキストのみのボタン */
 .text-button {
@@ -577,17 +667,21 @@ tr:has(.reentry-cell) {
     z-index: 999;
 }
 
-#input-directory-dialog {
-    display: flex;
-    flex-direction: column;
+.dialog {
     position: fixed;
     z-index: 999;
     background-color: var(--tab-color);
     width: 60vw;
-    height: 50vh;
-    top: 25vh;
-    left: 20vw;
+    top: 50%;
+    left: 50%;
+    transform: translateY(-50%) translateX(-50%);
     padding: 30px;
+    box-shadow: 0px 3px 10px 0px var(--shadow-color);
+}
+
+#input-directory-dialog {
+    display: flex;
+    flex-direction: column;
 }
 
 #input-directory-dialog div {
@@ -601,14 +695,32 @@ tr:has(.reentry-cell) {
     text-align: center;
 }
 
-#close-window {
+.close-window {
     position: absolute;
     right: 1em;
     top: 1em;
 }
 
-#close-window img {
+.close-window img {
     width: 2em;
+}
+
+#settings div {
+    border-top: 1px solid var(--medium-gray);
+    padding: 15px 0;
+}
+
+#settings h2 {
+    margin-bottom: 20px;
+}
+
+#settings select {
+    margin-bottom: 0;
+}
+
+#settings a {
+    color: var(--dark-gray);
+    margin-left: 1em;
 }
 
 input[type="text"] {

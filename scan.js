@@ -4,6 +4,29 @@ const randomCharacter = ['R', 'p', 'D', 'C', 'z', 'H', 'S', 'd', 'J', 'Z',
     'B', 'M', 'c', 'F', 'o', 'Y', 'g', 'h', 'u', 'A', '1', 'y', 'P', 'Q',
     'V', 'N', 'e', 'j', 'm', 'L', '4', '5', 'f', 'i'];
 
+// Cookieを設定する関数
+function setCookie(name, value, days) {
+    let expires = "";
+    if (days) {
+        const date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + (value || "") + expires + "; path=/; SameSite=Lax";
+}
+
+// Cookieを取得する関数
+function getCookie(name) {
+    const nameEQ = name + "=";
+    const ca = document.cookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) === ' ') { c = c.substring(1, c.length); }
+        if (c.indexOf(nameEQ) === 0) { return c.substring(nameEQ.length, c.length); }
+    }
+    return null;
+}
+
 const html5QrCode = new Html5Qrcode("reader");
 
 // 音声ファイルリスト
@@ -94,6 +117,9 @@ function getClassFromUrlParameter() {
             return classValue;
         }
     }
+    if (getCookie('classSelect')) {
+        return getCookie('classSelect');
+    }
     // パラメータが設定されていない場合または無効な場合は校内入場を返す
     return 21;
 }
@@ -103,7 +129,35 @@ const ScannedQRData = getScannedQRData();
 $(function () {
     $('#result').hide();
     $('#input-directory-dialog').hide();
+    $('.film').removeClass('show');
     $('.attribute').hide();
+    $('#settings').hide();
+
+    // --- 設定をCookieから読み込む ---
+    const settingsMap = {
+        'timesSelect': getCookie('timesSelect'),
+        'sound-switch': getCookie('sound-switch'),
+        'soundSelect': getCookie('soundSelect'),
+        'attributeSelect': getCookie('attributeSelect'),
+        'attributeCheck': getCookie('attributeCheck')
+    };
+
+    if (settingsMap['timesSelect']) { $('#timesSelect').val(settingsMap['timesSelect']); }
+    if (settingsMap['sound-switch']) { $('#sound-switch').prop('checked', settingsMap['sound-switch'] === 'true'); }
+    if (settingsMap['soundSelect']) { $('#soundSelect').val(settingsMap['soundSelect']); }
+    if (settingsMap['attributeSelect']) { $('#attributeSelect').val(settingsMap['attributeSelect']); }
+    if (settingsMap['attributeCheck']) { $('#attributeCheck').prop('checked', settingsMap['attributeCheck'] === 'true'); }
+
+
+    // --- 設定が変更されたらCookieに保存する ---
+    const cookieExpireDays = 365;
+    $('#classSelect').on('change', function () { setCookie('classSelect', $(this).val(), cookieExpireDays); });
+    $('#timesSelect').on('change', function () { setCookie('timesSelect', $(this).val(), cookieExpireDays); });
+    $('#sound-switch').on('change', function () { setCookie('sound-switch', $(this).prop('checked'), cookieExpireDays); });
+    $('#soundSelect').on('change', function () { setCookie('soundSelect', $(this).val(), cookieExpireDays); });
+    $('#attributeSelect').on('change', function () { setCookie('attributeSelect', $(this).val(), cookieExpireDays); });
+    $('#attributeCheck').on('change', function () { setCookie('attributeCheck', $(this).prop('checked'), cookieExpireDays); });
+
 
     // 音声ファイルをロード
     loadAllSounds();
@@ -158,22 +212,45 @@ $(function () {
         });
     });
 
-    // ディレクトリ入力ダイアログを開く
+    // 直接入力ダイアログを開く
     $('#input_directory').on('click', function () {
-        $('#input-directory-dialog').fadeIn(100);
+        $('#input-directory-dialog').fadeIn(200);
+        $('.film').addClass('show');
     });
 
-    // ディレクトリ入力ダイアログを閉じる
-    $('#close-window').on('click', function () {
-        $('#input-directory-dialog').fadeOut(100);
+    // 直接入力ダイアログを閉じる
+    $('#close-input-directory-window').on('click', function () {
+        $('#input-directory-dialog').fadeOut(200);
+        $('.film').removeClass('show');
     });
 
     $('#input-directory-summit').on('click', function () {
         const inputDirectory = $('#qrInput').val();
         $('#input-directory-dialog').hide();
+        $('.film').removeClass('show');
         $('#qrInput').val('');
         showResult('', inputDirectory);
     });
+
+    // 設定ダイアログを開く
+    $('#scan_settings').on('click', function () {
+        $('#settings').fadeIn(200);
+        $('.film').addClass('show');
+    });
+
+    // 設定ダイアログを閉じる
+    $('#close-settings-window').on('click', function () {
+        $('#settings').fadeOut(200);
+        $('.film').removeClass('show');
+    });
+
+    // 属性表示設定の連動
+    $('#attributeSelect').on('change', function () {
+        // selectの値が'3'（オフ）の時、チェックボックスをdisabledにする
+        const isDisabled = $(this).val() === '3';
+        $('#attributeCheck').prop('disabled', isDisabled);
+        setCookie('attributeSelect', $(this).val(), 365); // Cookieにも保存
+    }).trigger('change'); // 初期表示時にも実行
 });
 
 
@@ -202,6 +279,12 @@ function showResult(codeType, codeData) {
 
                 playSoundForCategory('再入場です');
 
+                if (performanceData.relation === '家族' && ($('#attributeSelect').val() === '1' || $('#attributeSelect').val() === '2') && $('#attributeCheck').prop('checked')) {
+                    $('.attribute').fadeIn(100);
+                    $('.attribute').addClass('g' + performanceData.grade);
+                    $('.attribute-grade span').text(performanceData.grade);
+                }
+
                 localStorage.setItem(localStorage.getItem('numberOfScans').toString(), dateTimeStr + '-' + codeData + '-' + classToCheck + '-' + timesToCheck + '-reentry');
             } else {
                 $('#result').removeClass('invalid reentry');
@@ -214,7 +297,7 @@ function showResult(codeType, codeData) {
 
                 playSoundForCategory('お進みください');
 
-                if (performanceData.relation === '家族') {
+                if (performanceData.relation === '家族' && ($('#attributeSelect').val() === '1' || $('#attributeSelect').val() === '2')) {
                     $('.attribute').fadeIn(100);
                     $('.attribute').addClass('g' + performanceData.grade);
                     $('.attribute-grade span').text(performanceData.grade);
@@ -238,6 +321,12 @@ function showResult(codeType, codeData) {
 
                     playSoundForCategory('再入場です');
 
+                    if (performanceData.relation === '家族' && $('#attributeSelect').val() === '1' && $('#attributeCheck').prop('checked')) {
+                        $('.attribute').fadeIn(100);
+                        $('.attribute').addClass('g' + performanceData.grade);
+                        $('.attribute-grade span').text(performanceData.grade);
+                    }
+
                     localStorage.setItem(localStorage.getItem('numberOfScans').toString(), dateTimeStr + '-' + codeData + '-' + classToCheck + '-' + timesToCheck + '-reentry');
                 } else {
                     $('#result').removeClass('invalid reentry');
@@ -250,6 +339,12 @@ function showResult(codeType, codeData) {
                     localStorage.setItem('numberOfVisitors', (Number(localStorage.getItem('numberOfVisitors') || '0') + 1).toString());
 
                     playSoundForCategory('お進みください');
+
+                    if (performanceData.relation === '家族' && $('#attributeSelect').val() === '1') {
+                        $('.attribute').fadeIn(100);
+                        $('.attribute').addClass('g' + performanceData.grade);
+                        $('.attribute-grade span').text(performanceData.grade);
+                    }
 
                     localStorage.setItem(localStorage.getItem('numberOfScans').toString(), dateTimeStr + '-' + codeData + '-' + classToCheck + '-' + timesToCheck + '-valid');
                 }
@@ -335,6 +430,9 @@ function playSound(filename, volumeMultiplier = 1) {
  * @param {string} category - 再生する音声のカテゴリ (例: 「お進みください」, 「再入場です」, 「異なるQR」, 「無効なQR」)
  */
 function playSoundForCategory(category) {
+    if (!$('#sound-switch').prop('checked')) {
+        return;
+    }
     const soundNumber = $('#soundSelect').val();
 
     // categoryに応じて効果音を決定
@@ -345,6 +443,14 @@ function playSoundForCategory(category) {
         effectSound = 'notification.mp3';
     } else if (category === '無効なQR' || category === '異なるQR') {
         effectSound = 'caution.mp3';
+    }
+
+    if (soundNumber === 'sound-effect-only') {
+        const effectAudio = soundCache[effectSound];
+        effectAudio.currentTime = 0;
+        effectAudio.onended = () => { };
+        effectAudio.play();
+        return;
     }
 
     // 効果音を再生してから、カテゴリ別の音声を再生
