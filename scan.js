@@ -6,6 +6,83 @@ const randomCharacter = ['R', 'p', 'D', 'C', 'z', 'H', 'S', 'd', 'J', 'Z',
 
 const html5QrCode = new Html5Qrcode("reader");
 
+// 音声ファイルリスト
+const soundFiles = [
+    'caution.mp3',
+    'celebration.mp3',
+    'notification.mp3',
+    'お進みください1.mp3',
+    'お進みください2.mp3',
+    'お進みください3.mp3',
+    '再入場です1.mp3',
+    '再入場です2.mp3',
+    '再入場です3.mp3',
+    '無効なQR1.mp3',
+    '無効なQR2.mp3',
+    '無効なQR3.mp3',
+    '異なるQR1.mp3',
+    '異なるQR2.mp3',
+    '異なるQR3.mp3',
+];
+
+// 音声キャッシュオブジェクト（最初は空）
+const soundCache = {};
+
+// Web Audio API 用のコンテキストとメディアソースキャッシュ（増幅に使用）
+let audioContext = null;
+const mediaNodes = {}; // filename -> { source, gainNode }
+
+function ensureAudioContext() {
+    if (!audioContext) {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    return audioContext;
+}
+
+function setupMediaNodesFor(filename) {
+    if (!soundCache[filename]) { return null; }
+    if (mediaNodes[filename] !== undefined) { return mediaNodes[filename]; }
+
+    try {
+        const ctx = ensureAudioContext();
+        const source = ctx.createMediaElementSource(soundCache[filename]);
+        const gainNode = ctx.createGain();
+        source.connect(gainNode);
+        gainNode.connect(ctx.destination);
+        mediaNodes[filename] = { source, gainNode };
+        return mediaNodes[filename];
+    } catch (e) {
+        // ブラウザや環境によっては createMediaElementSource が制限されることがある
+        alert('音声の設定に失敗しました。', filename, e);
+        mediaNodes[filename] = null;
+        return null;
+    }
+}
+
+/**
+ * sounds フォルダ内の全ての音声ファイルを fetch して、キャッシュに保存する
+ * @returns {Promise<Object>} キャッシュされた音声オブジェクト
+ */
+async function loadAllSounds() {
+    const soundsFolder = './sounds/';
+
+    for (const file of soundFiles) {
+        try {
+            const response = await fetch(soundsFolder + file);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch ${file}: ${response.statusText}`);
+            }
+            const audioBlob = await response.blob();
+            const audioUrl = URL.createObjectURL(audioBlob);
+            soundCache[file] = new Audio(audioUrl);
+        } catch (_error) {
+            // エラーログ出力は開発時のみ有効にする必要があります
+        }
+    }
+
+    return soundCache;
+}
+
 // GETパラメータからクラスを読み取る関数
 function getClassFromUrlParameter() {
     const params = new URLSearchParams(window.location.search);
@@ -27,6 +104,9 @@ $(function () {
     $('#result').hide();
     $('#input-directory-dialog').hide();
     $('.attribute').hide();
+
+    // 音声ファイルをロード
+    loadAllSounds();
 
     let facingMode = 'user';
 
@@ -120,6 +200,8 @@ function showResult(codeType, codeData) {
                 $('#timestamp').text('読み取り日時: ' + dateTimeStr);
                 $('.guide-message').text('ようこそ!外苑祭へ。係員の案内に従って、ご入場ください。');
 
+                playSoundForCategory('再入場です');
+
                 localStorage.setItem(localStorage.getItem('numberOfScans').toString(), dateTimeStr + '-' + codeData + '-' + classToCheck + '-' + timesToCheck + '-reentry');
             } else {
                 $('#result').removeClass('invalid reentry');
@@ -129,6 +211,8 @@ function showResult(codeType, codeData) {
                 $('#for-whom').text(performanceData.grade + '年' + performanceData.classNum + '組' + performanceData.Number + '番 ご' + performanceData.relation + '様');
                 $('#timestamp').text('読み取り日時: ' + dateTimeStr);
                 $('.guide-message').text('ようこそ!外苑祭へ。係員の案内に従って、ご入場ください。');
+
+                playSoundForCategory('お進みください');
 
                 if (performanceData.relation === '家族') {
                     $('.attribute').fadeIn(100);
@@ -152,6 +236,8 @@ function showResult(codeType, codeData) {
                     $('#timestamp').text('読み取り日時: ' + dateTimeStr);
                     $('.guide-message').text('ようこそ!外苑祭へ。係員の案内に従って、ご入場ください。');
 
+                    playSoundForCategory('再入場です');
+
                     localStorage.setItem(localStorage.getItem('numberOfScans').toString(), dateTimeStr + '-' + codeData + '-' + classToCheck + '-' + timesToCheck + '-reentry');
                 } else {
                     $('#result').removeClass('invalid reentry');
@@ -162,6 +248,8 @@ function showResult(codeType, codeData) {
                     $('#timestamp').text('読み取り日時: ' + dateTimeStr);
                     $('.guide-message').text('ようこそ!外苑祭へ。係員の案内に従って、ご入場ください。');
                     localStorage.setItem('numberOfVisitors', (Number(localStorage.getItem('numberOfVisitors') || '0') + 1).toString());
+
+                    playSoundForCategory('お進みください');
 
                     localStorage.setItem(localStorage.getItem('numberOfScans').toString(), dateTimeStr + '-' + codeData + '-' + classToCheck + '-' + timesToCheck + '-valid');
                 }
@@ -177,6 +265,8 @@ function showResult(codeType, codeData) {
                 $('#timestamp').text('読み取り日時: ' + dateTimeStr);
                 $('.guide-message').text('正しいクラス、正しいQRコードであるかご確認ください。');
 
+                playSoundForCategory('異なるQR');
+
                 localStorage.setItem(localStorage.getItem('numberOfScans').toString(), dateTimeStr + '-' + codeData + '-' + classToCheck + '-' + timesToCheck + '-invalid');
             }
         }
@@ -189,11 +279,11 @@ function showResult(codeType, codeData) {
         $('#timestamp').text('読み取り日時: ' + dateTimeStr);
         $('.guide-message').text('このQRコードは無効です。係員にお問い合わせください。');
 
+        playSoundForCategory('無効なQR');
+
         localStorage.setItem(localStorage.getItem('numberOfScans').toString(), dateTimeStr + '-' + codeData + '-' + classToCheck + '-' + timesToCheck + '-invalid');
     }
     $('#result').fadeIn(100);
-    // 読み取り音を再生（オプション）
-    playBeepSound();
     setTimeout(() => {
         $('#result').fadeOut(500);
         $('.film').removeClass('success error');
@@ -203,21 +293,87 @@ function showResult(codeType, codeData) {
 
 }
 
-// ビープ音を鳴らす関数
-function playBeepSound() {
-    const context = new (window.AudioContext || window.webkitAudioContext)();
-    const oscillator = context.createOscillator();
-    const gainNode = context.createGain();
+/**
+ * 指定された音声ファイルを再生する
+ * @param {string} filename - 再生する音声ファイル名（拡張子含む）
+ */
+function playSound(filename, volumeMultiplier = 1) {
+    const audio = soundCache[filename];
+    if (!audio) {
+        return;
+    }
 
-    oscillator.connect(gainNode);
-    gainNode.connect(context.destination);
+    audio.currentTime = 0; // 音声を最初から再生
+    // HTMLAudioElement.volume は 0.0 - 1.0 の範囲なので、1 を超える増幅には Web Audio API を使う
+    if (volumeMultiplier > 1) {
+        const nodes = setupMediaNodesFor(filename);
+        try {
+            const ctx = ensureAudioContext();
+            if (ctx && ctx.state === 'suspended') {
+                ctx.resume().catch(() => { });
+            }
 
-    oscillator.type = 'sine';
-    oscillator.frequency.value = 1000; // 周波数
-    gainNode.gain.value = 0.5; // 音量
+            if (nodes && nodes.gainNode) {
+                audio.volume = 1; // 要素自体は最大にしておく
+                nodes.gainNode.gain.value = volumeMultiplier;
+                audio.play().catch(() => { });
+                return;
+            }
+        } catch (_e) {
+            // Web Audio のセットアップに失敗したらフォールバックする
+        }
+    }
 
-    oscillator.start();
-    oscillator.stop(context.currentTime + 0.1);
+    // フォールバック: HTMLAudioElement.volume を 0-1 にクランプして再生
+    audio.volume = Math.max(0, Math.min(volumeMultiplier, 1));
+    audio.play().catch(() => { });
+}
+
+/**
+ * 選択された音声番号に基づいて、該当する音声を再生する
+ * 最初に効果音を再生してから、カテゴリ別の音声を再生する
+ * @param {string} category - 再生する音声のカテゴリ (例: 「お進みください」, 「再入場です」, 「異なるQR」, 「無効なQR」)
+ */
+function playSoundForCategory(category) {
+    const soundNumber = $('#soundSelect').val();
+
+    // categoryに応じて効果音を決定
+    let effectSound = '';
+    if (category === 'お進みください') {
+        effectSound = 'celebration.mp3';
+    } else if (category === '再入場です') {
+        effectSound = 'notification.mp3';
+    } else if (category === '無効なQR' || category === '異なるQR') {
+        effectSound = 'caution.mp3';
+    }
+
+    // 効果音を再生してから、カテゴリ別の音声を再生
+    if (effectSound && soundCache[effectSound]) {
+        const effectAudio = soundCache[effectSound];
+        effectAudio.currentTime = 0;
+
+        // 効果音の終了を待ってからカテゴリ別音声を再生
+        effectAudio.onended = () => {
+            if (category) {
+                const soundFileName = category + soundNumber + '.mp3';
+                playSound(soundFileName, 2);
+            }
+        };
+
+        effectAudio.play().catch(_err => {
+            // 再生に失敗した場合でもカテゴリ別音声を再生
+            if (category) {
+                const soundFileName = category + soundNumber + '.mp3';
+                playSound(soundFileName, 2);
+            }
+        });
+    } else {
+        // 効果音がない場合はカテゴリ別音声を直接再生
+        if (category) {
+            const soundFileName = category + soundNumber + '.mp3';
+            playSound(soundFileName, 2);
+        }
+    }
 }
 
 // ページアンロード時にスキャンを停止
