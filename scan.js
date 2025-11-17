@@ -126,7 +126,7 @@ function getClassFromUrlParameter() {
 
 const ScannedQRData = getScannedQRData();
 
-$(function () {
+$(async function () {
     $('#result').hide();
     $('#input-directory-dialog').hide();
     $('.film').removeClass('show');
@@ -159,9 +159,6 @@ $(function () {
     $('#attributeCheck').on('change', function () { setCookie('attributeCheck', $(this).prop('checked'), cookieExpireDays); });
 
 
-    // 音声ファイルをロード
-    loadAllSounds();
-
     let facingMode = 'user';
 
     // GETパラメータからクラスを設定
@@ -182,14 +179,45 @@ $(function () {
         ]
     };
 
-    html5QrCode.start(
-        { facingMode: facingMode },
-        config,
-        qrCodeSuccessCallback
-    ).then(() => {
-    }).catch(err => {
-        alert("カメラのアクセスに失敗しました: " + err);
-    });
+    // 音声ファイルを全てロードしておく
+    await loadAllSounds();
+
+    // Safari判定
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+    function startCamera() {
+        html5QrCode.start(
+            { facingMode: facingMode },
+            config,
+            qrCodeSuccessCallback
+        ).catch(err => {
+            alert("カメラのアクセスに失敗しました: " + err);
+        });
+    }
+
+    if (isSafari) {
+        // Safariの場合: オーバーレイを表示し、ボタンクリックを待つ
+        $('#start-scan-overlay').css('display', 'flex');
+
+        $('#start-scan-button').on('click', function () {
+            // オーディオコンテキストのロックを解除
+            const ctx = ensureAudioContext();
+            if (ctx.state === 'suspended') {
+                ctx.resume();
+            }
+            // 無音を再生して、再生システムを完全に起動させる
+            const silentSound = soundCache['celebration.mp3'];
+            if (silentSound) {
+                silentSound.volume = 0;
+                silentSound.play().then(() => { silentSound.pause(); silentSound.volume = 1; }).catch(() => {});
+            }
+            startCamera();
+            $('#start-scan-overlay').fadeOut(300);
+        });
+    } else {
+        // Safari以外の場合: 直接カメラを起動
+        startCamera();
+    }
 
     $('#camera_switch').on('click', function () {
         html5QrCode.stop().then(() => {

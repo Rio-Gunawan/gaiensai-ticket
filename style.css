@@ -792,3 +792,29 @@ footer {
         text-decoration: underline;
     }
 }
+
+/* スキャン開始オーバーレイ */
+#start-scan-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--film-background);
+    z-index: 9999;
+    display: none; /* デフォルトで非表示にする */
+    justify-content: center;
+    align-items: center;
+}
+
+#start-scan-box {
+    background-color: var(--tab-color);
+    padding: 40px 60px;
+    border-radius: 15px;
+    box-shadow: 0px 3px 10px 0px var(--shadow-color);
+}
+
+/* スキャン開始ボタンのフォントサイズを大きくする */
+#start-scan-button {
+    font-size: 1.5em;
+}
