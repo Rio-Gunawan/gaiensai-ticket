@@ -477,7 +477,7 @@ input[name="tab_item"] {
 
 .summary-block p {
     text-align: center;
-    margin: 0 4rem;
+    margin: 0 3rem;
 }
 
 .summary-block p:has(.small) {
@@ -489,7 +489,7 @@ input[name="tab_item"] {
 }
 
 .summary-number {
-    font-size: 10em;
+    font-size: 9em;
     font-weight: bold;
     color: var(--main-color);
     margin: 0 1rem;
@@ -497,7 +497,7 @@ input[name="tab_item"] {
 }
 
 .summary-number.small {
-    font-size: 6em;
+    font-size: 5em;
     line-height: 4rem;
 }
 

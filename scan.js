@@ -425,7 +425,7 @@ function showResult(codeType, codeData) {
         $('.film').removeClass('success error').hide();
         $('.attribute').hide().removeClass('g1 g2 g3');
         html5QrCode.resume();
-    }, 3000);
+    }, 4000);
 
 }
 
