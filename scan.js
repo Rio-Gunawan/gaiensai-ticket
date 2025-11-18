@@ -124,9 +124,20 @@ function getClassFromUrlParameter() {
     return 21;
 }
 
-const ScannedQRData = getScannedQRData();
+let ScannedQRData = [];
 
-$(async function () {
+/**
+ * ブラウザのアイドル時間を利用して、localStorageからスキャン済みQRデータを非同期で読み込む
+ */
+function loadScannedQRDataInBackground() {
+    const loadTask = () => {
+        ScannedQRData = getScannedQRData();
+    };
+    // requestIdleCallbackが利用可能ならそれを使う。そうでなければsetTimeoutで代用。
+    'requestIdleCallback' in window ? window.requestIdleCallback(loadTask) : setTimeout(loadTask, 1);
+}
+
+$(function () {
     $('#result').hide();
     $('#input-directory-dialog').hide();
     $('.film').removeClass('show').hide();
@@ -180,7 +191,10 @@ $(async function () {
     };
 
     // 音声ファイルを全てロードしておく
-    await loadAllSounds();
+    loadAllSounds();
+
+    // スキャン済みデータをバックグラウンドで読み込む
+    loadScannedQRDataInBackground();
 
     function startCamera() {
         html5QrCode.start(
