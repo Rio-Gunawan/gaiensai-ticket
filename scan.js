@@ -129,7 +129,7 @@ const ScannedQRData = getScannedQRData();
 $(async function () {
     $('#result').hide();
     $('#input-directory-dialog').hide();
-    $('.film').removeClass('show');
+    $('.film').removeClass('show').hide();
     $('.attribute').hide();
     $('#settings').hide();
 
@@ -242,19 +242,19 @@ $(async function () {
     // 直接入力ダイアログを開く
     $('#input_directory').on('click', function () {
         $('#input-directory-dialog').fadeIn(200);
-        $('.film').addClass('show');
+        $('.film').addClass('show').show();
     });
 
     // 直接入力ダイアログを閉じる
     $('#close-input-directory-window').on('click', function () {
         $('#input-directory-dialog').fadeOut(200);
-        $('.film').removeClass('show');
+        $('.film').removeClass('show').hide();
     });
 
     $('#input-directory-summit').on('click', function () {
         const inputDirectory = $('#qrInput').val();
         $('#input-directory-dialog').hide();
-        $('.film').removeClass('show');
+        $('.film').removeClass('show').hide();
         $('#qrInput').val('');
         showResult('', inputDirectory);
     });
@@ -262,13 +262,13 @@ $(async function () {
     // 設定ダイアログを開く
     $('#scan_settings').on('click', function () {
         $('#settings').fadeIn(200);
-        $('.film').addClass('show');
+        $('.film').addClass('show').show();
     });
 
     // 設定ダイアログを閉じる
     $('#close-settings-window').on('click', function () {
         $('#settings').fadeOut(200);
-        $('.film').removeClass('show');
+        $('.film').removeClass('show').hide();
     });
 
     // 属性表示設定の連動
@@ -315,7 +315,7 @@ function showResult(codeType, codeData) {
                 localStorage.setItem(localStorage.getItem('numberOfScans').toString(), dateTimeStr + '-' + codeData + '-' + classToCheck + '-' + timesToCheck + '-reentry');
             } else {
                 $('#result').removeClass('invalid reentry');
-                $('.film').addClass('success');
+                $('.film').addClass('success').show();
                 $("#result h2").text('読み取り成功');
                 $('#about-performance').text(performanceData.performance + ' 第' + performanceData.times + '公演');
                 $('#for-whom').text(performanceData.grade + '年' + performanceData.classNum + '組' + performanceData.Number + '番 ご' + performanceData.relation + '様');
@@ -357,7 +357,7 @@ function showResult(codeType, codeData) {
                     localStorage.setItem(localStorage.getItem('numberOfScans').toString(), dateTimeStr + '-' + codeData + '-' + classToCheck + '-' + timesToCheck + '-reentry');
                 } else {
                     $('#result').removeClass('invalid reentry');
-                    $('.film').addClass('success');
+                    $('.film').addClass('success').show();
                     $("#result h2").text('読み取り成功');
                     $('#about-performance').text(performanceData.performance + ' 第' + performanceData.times + '公演');
                     $('#for-whom').text(performanceData.grade + '年' + performanceData.classNum + '組' + performanceData.Number + '番 ご' + performanceData.relation + '様');
@@ -380,7 +380,7 @@ function showResult(codeType, codeData) {
                 localStorage.setItem('numberOfValidScans', (Number(localStorage.getItem('numberOfValidScans') || '0') + 1).toString());
             } else {
                 $('#result').addClass('invalid').removeClass('reentry');
-                $('.film').addClass('error');
+                $('.film').addClass('error').show();
                 $("#result h2").text('読み取り失敗');
                 $('#about-performance').text(performanceData.performance + ' 第' + performanceData.times + '公演');
                 $('#for-whom').text('このQRコードは別のクラスまたは公演回のものです。');
@@ -394,7 +394,7 @@ function showResult(codeType, codeData) {
         }
     } else {
         $('#result').addClass('invalid').removeClass('reentry');
-        $('.film').addClass('error');
+        $('.film').addClass('error').show();
         $("#result h2").text('読み取り失敗');
         $('#about-performance').text('無効なQRコード');
         $('#for-whom').text('---');
@@ -408,7 +408,7 @@ function showResult(codeType, codeData) {
     $('#result').fadeIn(100);
     setTimeout(() => {
         $('#result').fadeOut(500);
-        $('.film').removeClass('success error');
+        $('.film').removeClass('success error').hide();
         $('.attribute').hide().removeClass('g1 g2 g3');
         html5QrCode.resume();
     }, 3000);
