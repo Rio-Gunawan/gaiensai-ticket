@@ -825,3 +825,8 @@ footer {
     border: 1px solid var(--main-color);
     font-size: 0.9em;
 }
+
+.credit {
+    font-size: 0.8em;
+    text-align: right;
+}
