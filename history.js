@@ -16,7 +16,7 @@ $(function () {
         $('#visitors-of-classes').append('<p>スキャン履歴がありません。</p>');
         $('#visitors-of-times').append('<p>スキャン履歴がありません。</p>');
         $('#visitors-relationships').append('<p>スキャン履歴がありません。</p>');
-        $('#history-table tbody').append('<tr><td colspan="8">スキャン履歴がありません。</td></tr>');
+        $('#history-table tbody').append('<tr><td colspan="9">スキャン履歴がありません。</td></tr>');
     } else {
         // クラスごとの来場者数
         for (let classId = 0; classId < 21; classId++) {
